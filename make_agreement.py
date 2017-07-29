@@ -9,8 +9,8 @@ def render(tpl_path, context):
     return tmp.render(context)
 
 def main():
-    from variables.fill_in import objects as fill_in_vars
-    from variables.example import objects as example_vars
+    from variables.plain_fill_in import objects as fill_in_vars
+    from variables.plain_example import objects as example_vars
 
     # Create fill in template
     res = render("templates/plain.j2", fill_in_vars)
