@@ -1,72 +1,68 @@
-{% extends "base.j2" %}
+{% extends "plain_base.j2" %}
 
 {% block parties %}
 
-This contract agreement (the "Agreement") is entered into as of {{ agreement.date }} by and between {{ parties.assessor.name }} (the "Assessor") and {{ parties.recipient.name }} (the "Recipient") of the security assessment, (collectively the "Parties").
-
-**Assessor**
-
-- Name: {{ parties.assessor.representative.name }}
-
-- Title: {{ parties.assessor.representative.title }}
-
-- Date: ___________________________
-
-- Signature: ___________________________
-
-**Recipient**
-
-- Name: {{ parties.recipient.representative.name }}
-
-- Title: {{ parties.recipient.representative.title }}
-
-- Date: ___________________________
-
-- Signature: ___________________________
-
-The Recipient requests the Assessor perform a security assessment, (the "Engagement") and may request the Assessor perform other services in the future; and
-
-The Parties therefore agree as follows:
+This contract agreement (the "Agreement") is entered into as of {{ agreement.date }} by and between {{ parties.service_provider.name }} (the "Service Provider") and {{ parties.recipient.name }} (the "Recipient"), (collectively the "Parties").
 
 {% endblock %}
 
 {% block term_and_termination %}
 
-This Agreement takes effect immediately as of the Agreement Date, and remains in full force and effect until the Assessor has completed the Engagement (the "Term"), unless earlier terminated under the following conditions.
+This Agreement takes effect immediately as of the Agreement Date, and remains in full force and effect until Service Provider has completed the Engagement (the "Term"), unless earlier terminated by one party under the terms of this Agreement. All SOWs will automatically terminate upon early termination of this Agreement.
 
-## How can we terminate this agreement?
+### How can we terminate this agreement?
 
 Either Party may terminate this Agreement at any time, with or without cause, upon {{ agreement.termination.period_of_notice }} written notice.
 
 Either Party also may at any time terminate the Agreement immediately if the other party commits a breach of this Agreement and such party does not cure a breach within {{ agreement.termination.breach_remedy_period }} of written notice from the non-breaching party of such breach.
 
-## What happens if we terminate this agreement?
+### What happens if we terminate this agreement?
 
-{% if payment.client_funded is not none %}
+{% if payment.funded == "recipent" %}
 
-If this Agreement is terminated earlier by Recipient without cause, Recipient agrees to pay Assessor any and all sums which are due and payable for:
+If this Agreement is terminated earlier by Recipient without cause, Recipient agrees to pay Service Provider any and all sums which are due and payable for:
 * services provided as of the date of termination; and
 {% if expenses is not none %}
-* expenses already incurred, including those from documented non-cancelable commitments. Assessor agrees to use the best efforts to minimize such costs and expenses.
+* expenses already incurred, including those from documented non-cancelable commitments. Service Provider agrees to use the best efforts to minimize such costs and expenses.
 {% endif %}
 
-Upon termination, Recipient shall pay to Assessor all undisputed amounts due and payable. If upon termination Recipient has not paid undisputed fees owed for the material, deliverables or Services provided by Assessor as of the date of termination, Recipient agrees not to use any such material or the product of such Service, until Recipient has paid Assessor in full.
+Upon termination, Recipient shall pay to Service Provider all undisputed amounts due and payable. If upon termination Recipient has not paid undisputed fees owed for the material, deliverables or Services provided by Service Provider as of the date of termination, Recipient agrees not to use any such material or the product of such Service, until Recipient has paid Service Provider in full.
 
 {% endif %}
 
 Termination for any reason shall not affect the either Parties rights and/or responsibilities as outlined in the Privacy and Security section.
 
-## Are there any exceptions?
+### Are there any exceptions?
 
 Neither Party will not be deemed to be in breach of contract or otherwise responsible for delays or failures in performance resulting from **security incidents identified during the Engagement;** acts of God; acts of war or civil disturbance; epidemics; governmental action or inaction; fires; earthquakes; unavailability of labor, materials, power, or communication; or other causes that Parties reasonable control.
+{% endblock %}
 
+{% block disputes %}
+
+### Disputes will be settled through mediation and the costs will be shared
+
+If a dispute arises, the parties will try in good faith to settle it through a mediator to be mutually selected.
+
+The parties will share the costs of the mediator equally. Each party will cooperate fully and fairly with the mediator and will attempt to reach a mutually satisfactory compromise to the dispute.
+
+### If not resolved in mediation it will be submitted to binding arbitration
+
+If the dispute is not resolved within {{ disputes.days_of_mediation_until_arbitration_forced }} days after it is referred to the mediator, it will be settled by binding arbitration in {{ disputes.binding_arbitration_location }} or another location mutually agreeable to the parties. The parties will share the costs of the arbitrator equally. An award of arbitration may be confirmed in a court of competent jurisdiction.
+
+### If arbitration or litigation is required the party who loses pays the other party's attorney's fees
+
+In the event of arbitration, or litigation relating to the subject matter of this Agreement, the prevailing party shall have the right to collect from the other party its reasonable costs and necessary disbursements and attorneys' fees incurred in enforcing this Agreement.
+{% endblock %}
+
+{% block scope_changes %}
+{% if payment.funded == "recipient" %}The estimate outlined in the Section Payment Schedule of the Rules of Engagement is based on the scope of work and deliverables outlined. In the event that the scope of work changes, service provider will provide you with either a change order to this estimate or a new estimate covering the new project deliverables or added scope. Your signature on such document will be considered an amendment to this letter of agreement. {% else %} The current timeline is based on the scope of work, deliverables outlined, and availability of the Service Provider. In the event that the scope of work changes, service provider will provide you with a statement that includes the updated Scope of Work and any impact the proposed changes will have on the delivery dates of the SOW. Your signature on such document will be considered an amendment to this letter of agreement.{% endif %}
 {% endblock %}
 
 {% block deliverables %}
 
-## What deliverables will be produced during the Engagement?
+### What deliverables will be produced during the Engagement?
 
-The Assessor will provide the following deliverables to the Recipient.
+Service Provider will provide the following deliverables to the Recipient.
 
 {% for item in deliverables.deliv_items %}
 * {{ item }}
@@ -74,113 +70,116 @@ The Assessor will provide the following deliverables to the Recipient.
 
 {% if deliverables.includes_report is not none %}
 
-## Who will the report be written for?
+### Who will the report be written for?
 
-The Assessor will tailor the report for its targeted audiences in the following ways:
+Service Provider will tailor the report for its targeted audiences in the following ways:
 
 {% for item in deliverables.report.targeting %}
 * {{ item }}
 {%- endfor %}
 
-
 {% endif %}
 
-## What do I do if the deliverables are not complete or if I want changes made?
+### What do I do if the deliverables are not complete or if I want changes made?
 
-The Recipient must inform the Assessor within {{ deliverables.revisions.days_to_raise_corrections }} business days of receiving any Deliverable of any objections, corrections, changes or amendments Client wishes made to such Deliverable. If the Recipient does not provide this notice within said stated time period, the Deliverable shall be deemed accepted.
+The Recipient must inform Service Provider within {{ deliverables.revisions.days_to_raise_corrections }} business days of receiving any Deliverable of any objections, corrections, changes or amendments Client wishes made to such Deliverable. If the Recipient does not provide this notice within said stated time period, the Deliverable shall be deemed accepted.
 
-## How many revisions can I request?
+### How many revisions can I request?
 
 The Recipient can request up to {{ deliverables.revisions.number_allowed }} revisions to a deliverable.
 
-{% if payment.client_funded is not none %}
+{% if payment.funded == "recipient" %}
+{% if payment.assessor_provides_additional_service == true %}
 
-Beyond the included {{ deliverables.revisions.number_allowed }} round(s) of revisions per document will be billed at {{ payment.assessor_rate }} with a minimum duration of {{ deliverables.revisions.mimimum_billable_period }} of work.
+Beyond the included {{ deliverables.revisions.number_allowed }} round(s) of revisions per document will be billed at {{ payment.assessor_additional_revision_rate }} with a minimum duration of {{ deliverables.revisions.minimum_billable_period }} of work.
 
+{% endif %}
 {% endif %}
 
 {% endblock %}
 
 {% block indem_and_liability %}
 
-## Is the Assessor responsible if we suffer an attack in the future?
+The Recipient understands that digital security is a continually growing and changing field and that security guidance provided by Service Provider does not mean that the Recipient will be able to secure their software from every form of attack. There is no such thing as 100% security, and for example it is never possible to identify vulnerabilities in software or systems for threats that are not known at the time of the assessment.
 
-The Recipient understands that digital security is a continually growing and changing field and that security guidance provided by the Assessor does not mean that the Recipient will be able to secure their software from every form of attack.
+### Who is responsible if recipiant suffer a breach or other cyber-security incident in the future?
 
-There is no such thing as 100% security, and for example it is never possible to identify vulnerabilities in software or systems for threats that are not known at the time of the assessment.
-
-The Assessor shall be under no liability whatever to the Recipient for any indirect loss and/or expense (including loss of profit) suffered by the Recipient arising out of their security.
-
+Recipiant assumes sole and total responsibility and risk for any damages or liabilities arising directly or indirectly out of the services, this agreement, service provider’s performance of this agreement, any obligations resulting therefrom, and Recipiants’s reliance thereon; and recipiant agrees that any such damages or liabilities are not the responsibility of service provider.
 
 {% endblock %}
 
 {% block payment %}
 
-## Payment Terms
+### Payment Terms
 
-The Recipient understands the importance of paying the Assessor in a timely manner and wants to maintain a positive working relationship with the Assessor to keep the project moving forward.
+The Recipient understands the importance of paying Service Provider in a timely manner and wants to maintain a positive working relationship with Service Provider to keep the project moving forward.
 
-Payments for each invoice delivered by the Assessor to the Recipient are due within {{ payment.payment_due_days }} days of receipt. In case of overdue payments, the Assessor reserves the right to stop work until payment is received.
+Payments for each invoice delivered by Service Provider to the Recipient are due within {{ payment.payment_due_days }} days of receipt. In case of overdue payments, Service Provider reserves the right to stop work until payment is received.
 
 {% if payment.late_fee is not none %}
 
-## Late Payment
+### Late Payment
 
-In the event an invoice is not paid on time, to the maximum extent allowable by law, the Assessor will charge a late payment fee of {{ payment.late_fee_percentage }}% per {{ payment.late_fee_timeline }} on any overdue and unpaid balance not in dispute.
+In the event an invoice is not paid on time, to the maximum extent allowable by law, Service Provider will charge a late payment fee of {{ payment.late_fee_percentage }} per {{ payment.late_fee_timeline }} on any overdue and unpaid balance not in dispute.
 
 {% endif %}
 
 {% if expenses is not none %}
 
-## Expense Reimbursement
+### Expense Reimbursement
 
 The Recipient shall reimburse all expenses that are reasonable and that have been authorized in writing by the Recipient in advance; payable within {{ payment.payment_due_days }} days of itemized invoice. {{ expenses.payment_conditions }}
 
-{% if travel.expenses is not none %}
-
-Any Assessor travel required in the performance of the engagement will be paid for by {{ travel.expenses.responsible }} {{ travel.expenses.payment_conditions }}.
-
-{% endif %}
+Recipiant shall reimburse service provider for all reasonable out-of-pocket expenses incurred by service provider in performing services under this Agreement as long as such expenses are approved by recipiant in advance. Such expenses include, but are not limited to:
+1. third-party expenses for online services, such as hosting and/or computing;
+2. Service Provider travel required in the performance of the Engagement; and
+3. other expenses resulting from the work performed under this Agreement.
 
 {% endif %}
 
 {% endblock %}
-
 
 {% block sow %}
 
 The Assessment component of the Engagement will consist of the following phases:
 
 {% for item in engagement.activities %}
-* {{ item.name }}
-{%- endfor %}
-* Additionally, the {{ parties.assessor.designated_contact }} will hold meetings with the {{ parties.recipient.designated_contact }} , {{ engagement.update_meeting_frequency }}, to inform them of the overall progress of the assessment.
+#### {{ item.name }}
+* **Begins:** {{ item.begins }}
+* **Duration:** {{ item.length }}
+{{ item.description }}
+{% endfor %}
 
-For each phase, the Assessor will to combine research, interaction with key staff members, larger facilitated exercises, and where appropriate, technical verification/investigation to achieve a comprehensive understanding of the organization's potential risks.
-
-
+#### Update Meetings
+* **Begins:** Start of Assessment
+* **Duration:** Full Length of Assessment
+Additionally, service providers designated contact ({{ parties.service_provider.designated_contact }}) will hold meetings with recipiants designated contact ({{ parties.recipient.designated_contact }}), {{ engagement.update_meeting_frequency }}, to inform them of the overall progress of the assessment.
 {% endblock %}
 
 {% block assumptions %}
 
-* The Assessor has the experience and ability to do everything agreed to for Recipient and will do it all in a professional and timely manner. The Assessor will endeavor to meet every deadline and perform the Engagement in accordance with the sector’s best practices.
-* The Assessor will make every effort to avoid disrupting the Recipient's work environment more than is reasonable to conduct an assessment.
-* The Recipient's personnel will provide the assessors with all information requested to complete this engagement in a timely manner.
-* The recipient will provide full access to all Recipient participants and personnel, as required, throughout the duration of the engagement.
-* The Recipient will provide the Assessor adequate workspace and Internet connections while on site to access email and other online resources.
-* If the Recipient's emergency contacts do not have experience using the communication security practices outlined above the Assessor will guide them through the setup and use of the tools required.
+* Service Provider has the experience and ability to do everything agreed to for Recipient and will do it all in a professional and timely manner. Service Provider will endeavor to meet every deadline and perform the Engagement in accordance with the sector’s best practices.
+* Service Provider will make every effort to avoid disrupting the Recipient's work environment more than is reasonable to conduct an assessment.
+* The Recipient's personnel will provide service providers with all information requested to complete this engagement in a timely manner.
+* The Recipient will provide full access to all Recipient participants and personnel, as required, throughout the duration of the engagement.
+* The Recipient will provide Service Provider adequate workspace and Internet connections while on site to access email and other online resources.
+* If the Recipient's emergency contacts do not have experience using the communication security practices outlined above Service Provider will guide them through the setup and use of the tools required.
+* Service Provider is independent, non‐product affiliated, and not in the business of selling security systems hardware.
 
 {% endblock %}
 
-{% block schedule %}
+{% block pricing %}
 
-The Assessor will adhere to the following schedule
+Payments will be made to Service Provider for completion of milestones in accordance with the following payment schedule.
 
-{% for item in engagement.activities %}
-* The {{ item.name }} will begin {{ item.follows }} and will last {{ item.length }}.
+|Milestone|Estimated Completion Date|Payment Due on Delivery|
+| --------------------------- | --------------------------------------------------- | ---------: |{% for item in pricing.milestones %}
+| {{ item.name }} | {{ item.date }} | {{ item.price }} |
 {%- endfor %}
-
+| --------------------------- | --------------------------- | --------------------------- |
+| Total |  | {{ pricing.milestones|sum(attribute='price') }} |
 {% endblock %}
+
 
 {% block incident_response %}
 
@@ -190,7 +189,7 @@ The extent to which assessment activities will be suspended, and the degree to w
 
 The extent to which assessment activities should be suspended will vary based on the the type of incident, but in many cases the only activities suspended are those involving the systems directly involved in the incident.
 
-## Emergency Contacts
+### Emergency Contacts
 
 The Parties ability to be able to get in touch in an emergency is vital. Emergencies may arise, and each Party must have an established point of contact in order to handle them. Each Party will designate one or more emergency contacts. Each party will give a list containing the following information about each of those contacts to the other party.
 
@@ -207,24 +206,24 @@ The Parties ability to be able to get in touch in an emergency is vital. Emergen
 {%- endfor %}
 
 
-**Assessor Contacts**
+**Service Provider Contacts**
 
 |Full Name|Phone Number|Secure Channel|
-| --- | --- | --- |{% for item in parties.assessor.emergency_contacts %}
+| --- | --- | --- |{% for item in parties.service_provider.emergency_contacts %}
 | {{ item.name }} | {{ item.phone_number }} | {{ item.secure_channel }} |
 {%- endfor %}
 
-## Assessor Role in Addressing Incidents
+### Service Provider Role in Addressing Incidents
 
 When a security incident has been identified the Parties will come to an agreement as to whether the incident should be addressed immediately, or should be addressed after the Engagement.
 
 {% if incident_response.assessor_mitigate_incident == true %}
 
-If the Parties decide that the security incident should be addressed immediately the Assessor will mitigate, to the extent practicable, the harmful effects of the security incident that are known to the Assessor; and document security incidents and their outcomes.
+If the Parties decide that the security incident should be addressed immediately Service Provider will mitigate, to the extent practicable, the harmful effects of the security incident that are known to Service Provider; and document security incidents and their outcomes.
 
 {% elif incident_response.assessor_refer_incident == true %}
 
-If the Parties decide that the security incident should be addressed immediately the Assessor will work with the Recipient to identify and contact an appropriate third-party who can mitigate, to the extent practicable, the harmful effects of the security incident that are known to the Assessor; and document security incidents and their outcomes. At this point the Parties will determine the extent to which the Assessor should continue assessment activities.
+If the Parties decide that the security incident should be addressed immediately Service Provider will work with the Recipient to identify and contact an appropriate third-party who can mitigate, to the extent practicable, the harmful effects of the security incident that are known to Service Provider; and document security incidents and their outcomes. At this point the Parties will determine the extent to which Service Provider should continue assessment activities.
 
 {% endif %}
 
@@ -232,20 +231,18 @@ If the Parties decide that the security incident should be addressed immediately
 
 {% block priv_sec %}
 
-# Privacy and Security
-
 - All Engagement findings, results, and recommendations are confidential and will be treated as such.
-- Assessor will not share any information that has been disclosed between Parties in relation to the Engagement.
+- Service Provider will not share any information that has been disclosed between Parties in relation to the Engagement.
 - Confidential information will only be used for the purpose of the Engagement.
 - Both Parties will keep this Agreement confidential, and will not disclose either the existence or the terms of the Agreement to third parties.
 - Where disclosure to a third party is essential, the party wishing to disclose the information shall obtain prior written authorization to do so from the other party.
 
-{% if payment.externally_funded == true %}
+{% if payment.funded == "third party" %}
    {% if privsec.external_funder.access == true %}
 
-## Exceptions
+### Exceptions
 
-The Assessor is able to provide the following information to the third-party funder of the Engagement (the "Funder").
+Service Provider is able to provide the following information to the third-party funder of the Engagement (the "Funder").
 
 {% for item in privsec.external_funder.information_disclosed %}
 * {{ item }}
@@ -253,7 +250,7 @@ The Assessor is able to provide the following information to the third-party fun
 
 All information provided to the Funder will comply with the same Communications Security practices described in the next section.
 
-The Assessor will take the following additional actions to reduce any risk to the Recipient when sharing this information.
+Service Provider will take the following additional actions to reduce any risk to the Recipient when sharing this information.
 
 {% for item in privsec.external_funder.additional_security %}
 * {{ item }}
@@ -268,41 +265,40 @@ In the event either Party is required to disclose Confidential Information pursu
 
 {% block safeguards %}
 
-# Safeguards to Protect Confidential Data and Communications
+### Device Security
 
-## Device Security
-The Assessor will secure all the devices they will use for the assessment. This includes
+Service Provider will secure all the devices they will use for the assessment. This includes
 {% for item in privsec.device_security %}
 * {{ item }}
 {%- endfor %}
 
-## Communications Security
+### Communications Security
 
-It will often be essential that confidential information be shared between the Recipient and the Assessor. In these situations, the Parties will adhere to the following standards:
+It will often be essential that confidential information be shared between the Recipient and Service Provider. In these situations, the Parties will adhere to the following standards:
   - Any confidential information shared between the Parties via email must be encrypted.
   - Any deliverables containing confidential information must be encrypted and password-protected.
   - All passwords used for deliverables will meet or exceed complex password standards.
   - Any passwords that need to be communicated will be communicated in person or via an encrypted voice and/or video platform.
 
-## Data Destruction
+### Data Destruction
 
 {% if context.on_site_activities %}
 
-At the conclusion of the on-site portions of the Engagement, all engagement workpapers and hardcopy documents will be digitized, encrypted and stored on a secure file server by the Assessor. The Assessor will destroy the above hardcopy documents using the destruction practices described below.
+At the conclusion of the on-site portions of the Engagement, all engagement workpapers and hardcopy documents will be digitized, encrypted and stored on a secure file server by Service Provider. Service Provider will destroy the above hardcopy documents using the destruction practices described below.
 
 {% endif %}
 
-The Assessor will destroy all confidential material {{ privsec.data_retention_period }} after the Engagement.
+Service Provider will destroy all confidential material {{ privsec.data_retention_period }} after the Engagement.
 
-When destroying confidential material the Assessor will permanently delete all electronic data from all Assessor’ devices and hardcopy documents containing confidential information will be destroyed by shredding, tearing in small pieces, or burning.
+When destroying confidential material Service Provider will permanently delete all electronic data from all Service Provider’ devices and hardcopy documents containing confidential information will be destroyed by shredding, tearing in small pieces, or burning.
 
-## Authorized Recipients Of Confidential Information
+### Authorized Recipients Of Confidential Information
 
 The above "Privacy and Security" and "Safeguards to Protect Confidential Data and Communications" statements define the entire agreement between the involved parties concerning the circulation and disclosure of Confidential Information.
 
 The receiving parties agree not to disclose such information to any party not defined in this document as an ”authorized” party.
 
-{% if payment.externally_funded == true %}
+{% if payment.funded == "third party" %}
    {% if privsec.external_funder.access == true %}
 The third parties identified in the Exceptions subsection to the Privacy and Security section are considered “authorized” parties for the specific pieces of information outlined in that section
 {% endif %}
@@ -316,10 +312,10 @@ Authorized Recipients Of Confidential Information
 | Party     |Full Name    |Signature |
 | --- | --- | --- |{% for item in parties.recipient.emergency_contacts %}
 | | |
-| Recipiant | {{ item.name }} |_______________________ |
-{%- endfor %}{% for item in parties.assessor.emergency_contacts %}
+| Recipiant | {{ item.name }} | _______________________ |
+{%- endfor %}{% for item in parties.service_provider.emergency_contacts %}
 | | |
-| Assessor  | {{ item.name }} | |
+| Service Provider  | {{ item.name }} | _______________________ |
 {%- endfor %}
 
 

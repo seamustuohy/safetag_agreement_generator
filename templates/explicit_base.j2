@@ -1,0 +1,155 @@
+# Security Assessment Agreement
+
+## Goal
+
+{{ agreement.goal }}
+
+## Parties
+
+{% block parties %}{% endblock %}
+
+## Purpose of Agreement
+
+The Recipient requests the Service Provider perform a security assessment (the "Engagement") by performing work outlined in the attached document titled ”Rules of Engagement”. The Parties therefore agree as follows:
+
+## Scope of Work
+
+The Service Provider will provide a security assessment as outlined in the attached document titled ”Rules of Engagement” (”Rules of Engagement”, "Statement of Work", or "SOW")
+
+## Project Term
+
+{% block project_term %}{% endblock %}
+
+## Changes in Project Scope
+
+{% block scope_changes %}{% endblock %}
+
+## Acceptance of Deliverables
+
+{% block acceptance_of_deliverables %}{% endblock %}
+
+## Additional Work and Addressing Vulnerabilities
+
+{% block future_work %}{% endblock %}
+
+## Termination of Agreement or Statements of Work
+
+{% block termination %}{% endblock %}
+
+## Disputes
+
+{% block disputes %}{% endblock %}
+
+## Attorney Fees
+{% block attorney_fees %}{% endblock %}
+
+## Force Majeure
+
+{% block force_majeure %}{% endblock %}
+
+## Survival
+
+{% block survival %}{% endblock %}
+
+## Limited Liability
+
+{% block indem_and_liability %}{% endblock %}
+
+{% if payment.funded == "recipient" %}
+## Payment
+   {% block payment %}{% endblock %}
+{% endif %}
+
+## Independant contractor
+
+{% block independant_contractor %}{% endblock %}
+
+## General Provisions
+
+{% block general_provisions %}{% endblock %}
+
+## Signatures
+
+{% block signatures %}
+
+The terms and conditions of this Agreement may be modified or amended as necessary only by written instrument signed by both parties. By signing this Agreement, I indicate that I understand, agree to and accept the terms and conditions listed above and in all referenced documents throughout, dated {{ agreement.date }}.
+
+**Service Provider**
+
+- Name: {{ parties.service_provider.representative.name }}
+
+- Title: {{ parties.service_provider.representative.title }}
+
+- Date: ___________________________
+
+- Signature: ___________________________
+
+**Recipient**
+
+- Name: {{ parties.recipient.representative.name }}
+
+- Title: {{ parties.recipient.representative.title }}
+
+- Date: ___________________________
+
+- Signature: ___________________________
+
+{% endblock %}
+
+# Rules of Engagement
+
+## Service Provider Representations and Warranties
+
+{% block assessor_warranties %}{% endblock %}
+
+## Recipiant Representations and Warranties
+
+{% block recipiant_warranties %}{% endblock %}
+
+## Scope of Work
+{% block sow %}{% endblock %}
+
+{% if payment.funded == "recipient" %}
+## Payment Schedule
+{% block pricing %}{% endblock %}
+{% endif %}
+
+{% if payment.predefined_rates_for_additional_work == true %}
+## Rate Schedule
+{% block rate_schedule %}{% endblock %}
+{% endif %}
+
+## Deliverables
+
+{% block deliverables %}{% endblock %}
+
+## Estimated Engagement Schedule
+
+{% block schedule %}{% endblock %}
+
+## Incident Response Procedures
+
+{% block incident_response %}{% endblock %}
+
+## Confidential Information
+
+{% block priv_sec %}{% endblock %}
+
+## Information Security Safeguards
+
+{% block safeguards %}{% endblock %}
+
+## Signatures
+
+By signing this document, {{ parties.recipient.representative.name }} gives {{ parties.service_provider.representative.name }} permission to conduct the above Statement of Work and agrees to adhere to the terms and conditions aforementioned in this document.
+
+By signing this document, {{ parties.service_provider.representative.name }} agrees to conduct to the above Statement of Work. {{ parties.service_provider.representative.name }} also agrees to adhere to the terms and conditions aforementioned in this document.
+
+{{ parties.recipient.representative.name }}:
+
+_____________________________________
+
+
+{{ parties.service_provider.representative.name }}:
+
+______________________________________
