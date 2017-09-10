@@ -1,0 +1,7 @@
+security_focus, reponsible_parties, guideline
+"devices","service_provider","All devices will have full-disk encryption enabled and will be powered down when traveling."
+"data","service_provider","When destroying confidential material Service Provider will permanently delete all electronic data from all Service Provider’ devices and hardcopy documents containing confidential information will be destroyed by shredding, tearing in small pieces, or burning."
+"devices","service_provider","All mobile devices will have remote wipe enabled"
+"devices","service_provider","All passwords used on devices will meet or exceed complex password standards"
+"devices","service_provider","All passwords pertaining to the Recipiants assessment - including, but not limited to Wi-Fi, device, and service passwords - will be stored in a password manager under an assessment specific keering and treated as confidential information"
+"devices","service_provider","All devices will be fully wiped and/or \"factory reset\" upon the completion of the assessment"

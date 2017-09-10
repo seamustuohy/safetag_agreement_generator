@@ -2,36 +2,45 @@
 
 {# DONE #}
 {% block parties %}
-This contract agreement (the "Agreement") is entered into as of {{ agreement.date }} by and between {{ parties.service_provider.name }} (the "Service Provider"), a {{ parties.service_provider.entity_type }} located at {{ parties.service_provider.address }} and {{ parties.recipient.name }} (the "Recipient"), a {{ parties.recipient.entity_type }} located at {{ parties.recipient.address }},  (collectively the "Parties").
+This contract agreement (the "Agreement") is entered into as of {{ term_of_contract.agreement_start_date }} by and between {{ parties.service_provider_name }} (the "Service Provider"), a {{ parties.service_provider_entity_type }} located at {{ parties.service_provider_address }} and {{ parties.recipient_name }} (the "Recipient"), a {{ parties.recipient_entity_type }} located at {{ parties.recipient_address }},  (collectively the "Parties").
 {% endblock %}
 
 {# DONE #}
 {% block project_term %}
-This Agreement takes effect immediately as of the Agreement Date, and remains in full force and effect until Service Provider has completed the Engagement (the "Term") which is estimated to be {{ agreement.term_end }}, unless earlier terminated by one party under the terms of this Agreement. All Statements of Work will automatically terminate upon early termination of this Agreement.
+This Agreement takes effect immediately as of the Agreement Date, and remains in full force and effect until Service Provider has completed the Engagement (the "Term"),{% if (term_of_contract.event_that_completes_agreement == "date") or (term_of_contract.event_that_completes_agreement == "both") %} which is estimated to be {{ term_of_contract.agreement_end_date -}},{% endif %} unless earlier terminated by one party under the terms of this Agreement. All Statements of Work will automatically terminate upon early termination of this Agreement.
 {% endblock %}
 
 {# DONE #}
 {% block scope_changes %}
 If at any time following execution of a Statement of Work by Service Provider, Recipient should desire a change in Service Providers performance under the Statement of Work that will alter or amend the Specifications or other elements of the Statement of Work, Recipient shall submit to Service Provider a written proposal specifying the desired changes.
 
-{% if (payment.funded == "recipient") or (payment.scope_changes_at_recipient_expense == true) %}
-Service Provider will evaluate each such proposal at its standard rates and charges. Service Provider shall submit to Recipient a written response to each such proposal within {{ agreement.scope_changes_response_days  }} working days following receipt thereof. Service Providers written response shall include a statement of the availability of Service Providers personnel and resources, as well as any impact the proposed changes will have on the contract price or delivery dates of the SOW, or the warranty provisions of this Agreement. The signature of Recipient's authorized representative on such a document will be deemed to be approval of the modification and any associated fees.
+{% if payment.assessor_provides_additional_service == true %}
+{% if (payment.funded == "recipient") or (payment.recipiant_must_pay_for_additional_service == true) %}
+Service Provider will evaluate each such proposal at its standard rates and charges. Service Provider shall submit to Recipient a written response to each such proposal within {{ scope_changes.sow_modification_notification_days  }} working days following receipt thereof. Service Providers written response shall include a statement of the availability of Service Providers personnel and resources, as well as any impact the proposed changes will have on the contract price or delivery dates of the SOW, or the warranty provisions of this Agreement. The signature of Recipient's authorized representative on such a document will be deemed to be approval of the modification and any associated fees.
 {% else %}
-Service Provider shall submit to Recipient a written response to each such proposal within {{ agreement.scope_changes_response_days  }} working days following receipt thereof. Service Providers written response shall include a statement of the availability of Service Providers personnel and resources, as well as any impact the proposed changes will have on the delivery dates of the SOW, or the warranty provisions of this Agreement. The signature of Recipient's authorized representative on such a document will be deemed to be approval of the modification.
+Service Provider shall submit to Recipient a written response to each such proposal within {{ termination_with_cause.days_to_remedy_breach  }} working days following receipt thereof. Service Providers written response shall include a statement of the availability of Service Providers personnel and resources, as well as any impact the proposed changes will have on the delivery dates of the SOW, or the warranty provisions of this Agreement. The signature of Recipient's authorized representative on such a document will be deemed to be approval of the modification.
 {% endif %}
+{% endif %}
+
+{% if (agreement.utilizing_third_parties == true) and (agreement.recipiant_written_approval_of_third_parties == true) %}
+### Subcontracting
+
+Service Provider shall not subcontract its obligations under this Agreement to another person or entity, in whole or in part, without Recipients prior written approval. Prior to seeking Recipients consent, Service Provider will provide Recipient with full details of the proposed Contractor’s involvement including the identity of the Contractor, a description of the access to Confidential Information proposed, and any other information Recipient may reasonably request in order to assess the risks involved in allowing the Contractor to carry out Activities in this Engagement.
+{% endif %}
+
 {% endblock %}
 
 {# DONE #}
 {% block future_work %}
-The parties shall collaborate in good faith on all future work, if any, beyond the Initial Statement of Work, including for Assessment related incident response, security guidance, and vulnerability mitigation. {% if payment.predefined_rates_for_additional_work == true %}{% if payment.notice_for_changes_to_rates_for_additional_days == true %} The Rules of Engagement sets forth a Rate Schedule for such activities, which may change from time to time during the Term of the Engagement on at least {{ payment.days_notice_before_rate_change }} days’ notice to Recipient. After the Term of the Engagment Service Providers rates are subject to change without notice at the discretion of Service Provider. {% else %} The Rate Schedule within the Rules of Engagement sets forth estimated rates for such activities. These rates are subject to change without notice at the discretion of Service Provider. Service Provider will provide an updated Rate Schedule upon Recipients request. {% endif %} {% endif %}
+The parties shall collaborate in good faith on all future work, if any, beyond the Initial Statement of Work, including for Assessment related incident response, security guidance, and vulnerability mitigation. {% if payment.recipiant_must_pay_for_additional_service == true %} The Rate Schedule within the Rules of Engagement sets forth estimated rates for such activities. These rates are subject to change without notice at the discretion of Service Provider. Service Provider will provide an updated Rate Schedule upon Recipients request. {% endif %}
 {% endblock %}
 
 {# DONE #}
 {% block termination %}
 
-Either Party may terminate this Agreement at any time, with or without cause, upon {{ agreement.termination.period_of_notice }} written notice.
+Either Party may terminate this Agreement at any time, with or without cause, upon {{ termination_without_cause.days_in_notice_period }} written notice.
 
-Either Party also may at any time terminate the Agreement immediately if the other party commits a breach of this Agreement and such party does not cure a breach within {{ agreement.termination.breach_remedy_period }} of written notice from the non-breaching party of such breach.
+Either Party also may at any time terminate the Agreement immediately if the other party commits a breach of this Agreement and such party does not cure a breach within {{ termination_with_cause.days_to_remedy_breach }} of written notice from the non-breaching party of such breach.
 
 {% if payment.funded == "recipient" %}
 Regardless of the reason for termination, Recipient shall pay Service Provider for all Deliverables accepted by Recipient prior to the date of termination.
@@ -41,8 +50,8 @@ Regardless of the reason for termination, Recipient shall pay Service Provider f
 
 If this Agreement is terminated earlier by Recipient without cause, All amounts payable or accrued to Service Provider under this Agreement shall become immediately due and payable.
 
-{% if payment.recipient_must_pay_for_all_services_upon_termination == true %}
-Upon such termination, all amounts owed to Service Provider under this Agreement for accepted work {% if payment.cancellation_fee != false %} as well as a cancellation fee {{ payment.cancellation_fee }} {% endif %} shall immediately become due and payable.
+{% if termination_without_cause.cancellation_fee == true %}
+Upon such termination, all amounts owed to Service Provider under this Agreement for accepted work {% if termination_without_cause.cancellation_fee == true %} as well as a cancellation fee {{ termination_without_cause.cancellation_fee_amount }} {% endif %} shall immediately become due and payable.
 {% else %}
 Upon termination, Recipient shall pay to Service Provider all undisputed amounts due and payable. If upon termination Recipient has not paid undisputed fees owed for the material, deliverables or Services provided by Service Provider as of the date of termination, Recipient agrees not to use any such material or the product of such Service, until Recipient has paid Service Provider in full.
 {% endif %}
@@ -50,31 +59,28 @@ Upon termination, Recipient shall pay to Service Provider all undisputed amounts
 {% endblock %}
 
 {# DONE #}
-{% block survival %}
-The provisions of the Sections "Disputes", "Attorney Fees", "Ownership of Work Product", and "Limited Liability" within this Agreement and the Sections "Confidential Information" and "Information Security Safeguards" within the Rules of Engagement will survive any termination of this Agreement.
-{% endblock %}
-
-{# DONE #}
 {% block acceptance_of_deliverables %}
-Recipient must inform Service Provider within {{ deliverables.revisions.days_to_raise_corrections }} business days of receiving any Deliverable of any objections, corrections, changes or amendments Recipient wishes made to such Deliverable. If Recipient does not provide this notice within said stated time period, the Deliverable shall be deemed accepted.
 
-If the Deliverable does not conform to the specifications, Recipient shall give Service Provider written notice stating why the Deliverable is unacceptable. Service Provider shall have {{ deliverables.revisions.days_to_fix_deliverable }} days from the receipt of such notice to correct the deficiencies. Recipient shall then have {{ deliverables.revisions.days_to_raise_corrections }} days to inspect, test and evaluate the Deliverable. If the Deliverable still does not conform to the specifications, Recipient shall have the option of either
+Recipient must inform Service Provider within {{ termination_with_cause.days_until_auto_acceptance }} business days of receiving any Deliverable of any objections, corrections, changes or amendments Recipient wishes made to such Deliverable. If Recipient does not provide this notice within said stated time period, the Deliverable shall be deemed accepted.
+
+If the Deliverable does not conform to the specifications, Recipient shall give Service Provider written notice stating why the Deliverable is unacceptable. Service Provider shall have {{ termination_with_cause.days_to_remedy_breach }} days from the receipt of such notice to correct the deficiencies. Recipient shall then have {{ termination_with_cause.days_until_auto_acceptance }} days to inspect, test and evaluate the Deliverable. If the Deliverable still does not conform to the specifications, Recipient shall have the option of either
 * repeating the procedure set forth above, or
 * terminating this Agreement pursuant to the section of this Agreement entitled "Termination of Agreement or Statements of Work."
-{% if deliverables.revisions.number_allowed > 0 %} Revisions to deliverables made to correct deficiencies do not count towards the {{ deliverables.revisions.number_allowed }} revisions Recipient is allowed as outlined in the Section "Deliverables" within the Rules of Engagment.
+{% if scope_changes.unpaid_recipiant_requested_revisions == true %} * Revisions to deliverables made to correct deficiencies do not count towards the {{ scope_changes.number_of_free_revisions_allowed }} revisions Recipient is allowed as outlined in the Section "Deliverables" within the Rules of Engagment.
 {% endif %}
 {% endblock %}
 
 {# DONE #}
 {% block disputes %}
-The parties agree that any and all disputes, claims or controversies arising out of or relating to this Agreement shall be submitted to {{ disputes.dispute_resolution_provider }}, or its successor, for mediation, and if the matter is not resolved through mediation, then it shall be submitted to {{ disputes.dispute_resolution_provider }}, or its successor, for final and binding arbitration pursuant to the clause set forth in Paragraph 5 below.
+The parties agree that any and all disputes, claims or controversies arising out of or relating to this Agreement shall be submitted to {{ disputes.alternative_dispute_resolution_provider }}, or its successor, {% if disputes.mediation_occurs_before_other_adr_or_legislation == true %}for mediation, and if the matter is not resolved through mediation, then it shall be submitted to {{ disputes.alternative_dispute_resolution_provider }}, or its successor, {% endif %} for final and binding arbitration {% if disputes.mediation_occurs_before_other_adr_or_legislation == true %}  pursuant to the clause set forth in Paragraph 5 below. {% else %} Judgment on the Award may be entered in any court having jurisdiction. This clause shall not preclude parties from seeking provisional remedies in aid of arbitration from a court of appropriate jurisdiction. {% endif %}
 
-1. Either party may commence mediation by providing to {{ disputes.dispute_resolution_provider }} and the other party a written request for mediation, setting forth the subject of the dispute and the relief requested.
-2. The parties will cooperate with {{ disputes.dispute_resolution_provider }} and with one another in selecting a mediator from the {{ disputes.dispute_resolution_provider }} panel of neutrals and in scheduling the mediation proceedings. The parties agree that they will participate in the mediation in good faith and that they will share equally in its costs.
-3. All offers, promises, conduct and statements, whether oral or written, made in the course of the mediation by any of the parties, their agents, employees, experts and attorneys, and by the mediator or any {{ disputes.dispute_resolution_provider }} employees, are confidential, privileged and inadmissible for any purpose, including impeachment, in any arbitration or other proceeding involving the parties, provided that evidence that is otherwise admissible or discoverable shall not be rendered inadmissible or nondiscoverable as a result of its use in the mediation.
-4. Either party may initiate arbitration with respect to the matters submitted to mediation by filing a written demand for arbitration at any time following the initial mediation session or at any time following {{ disputes.arbitration_earliest_initiation_date }} days from the date of filing the written request for mediation, whichever occurs first (“Earliest Initiation Date”). The mediation may continue after the commencement of arbitration if the parties so desire.
-5. At no time prior to the Earliest Initiation Date shall either side initiate an arbitration or litigation related to this Agreement except to pursue a provisional remedy that is authorized by law or by {{ disputes.dispute_resolution_provider }} Rules or by agreement of the parties. However, this limitation is inapplicable to a party if the other party refuses to comply with the requirements of Paragraph 3 above.
-6. All applicable statutes of limitation and defenses based upon the passage of time shall be tolled until {{ disputes.days_adr_tolls_statues_of_limitations }} days after the Earliest Initiation Date. The parties will take such action, if any, required to effectuate such tolling
+{% if disputes.mediation_occurs_before_other_adr_or_legislation == true %}
+1. Either party may commence mediation by providing to {{ disputes.alternative_dispute_resolution_provider }} and the other party a written request for mediation, setting forth the subject of the dispute and the relief requested.
+2. The parties will cooperate with {{ disputes.alternative_dispute_resolution_provider }} and with one another in selecting a mediator from the {{ disputes.alternative_dispute_resolution_provider }} panel of neutrals and in scheduling the mediation proceedings. The parties agree that they will participate in the mediation in good faith and that they will share equally in its costs.
+3. All offers, promises, conduct and statements, whether oral or written, made in the course of the mediation by any of the parties, their agents, employees, experts and attorneys, and by the mediator or any {{ disputes.alternative_dispute_resolution_provider }} employees, are confidential, privileged and inadmissible for any purpose, including impeachment, in any arbitration or other proceeding involving the parties, provided that evidence that is otherwise admissible or discoverable shall not be rendered inadmissible or nondiscoverable as a result of its use in the mediation.
+4. Either party may initiate arbitration with respect to the matters submitted to mediation by filing a written demand for arbitration at any time following the initial mediation session or at any time following {{ disputes.delay_after_mediation_before_requesting_other_means }} days from the date of filing the written request for mediation, whichever occurs first (“Earliest Initiation Date”). The mediation may continue after the commencement of arbitration if the parties so desire.
+5. At no time prior to the Earliest Initiation Date shall either side initiate an arbitration or litigation related to this Agreement except to pursue a provisional remedy that is authorized by law or by {{ disputes.alternative_dispute_resolution_provider }} Rules or by agreement of the parties. However, this limitation is inapplicable to a party if the other party refuses to comply with the requirements of Paragraph 3 above.
+{% endif %}
 {% endblock %}
 
 {# DONE #}
@@ -84,20 +90,7 @@ In the event of arbitration, or litigation relating to the subject matter of thi
 
 {# DONE #}
 {% block force_majeure %}
-Neither Party will not be deemed to be in breach of contract or otherwise responsible for delays or failures in performance resulting from {% if incident_response.security_incidents_are_force_majeur == true %} **security incidents identified during the Engagement;** {% endif %} acts of God; acts of war or civil disturbance; epidemics; governmental action or inaction; fires; earthquakes; unavailability of labor, materials, power, or communication; or other causes beyond such Parties reasonable control.
-{% endblock %}
-
-{# DONE #}
-{% block indem_and_liability %}
-Recipient understands that digital security is a continually growing and changing field and that security guidance provided by Service Provider does not mean that Recipient will be able to secure their software and systems from every form of attack. There is no such thing as 100% security, and for example it is never possible to identify vulnerabilities in software or systems for threats that are not known at the time of the assessment.
-
-Recipient assumes sole and total responsibility and risk for any damages or liabilities arising directly or indirectly out of the services, this agreement, Service Provider’s performance of this agreement, any obligations resulting therefrom, and Recipients’s reliance thereon; and Recipient agrees that any such damages or liabilities are not the responsibility of Service Provider.
-
-Without limiting the foregoing, Service Provider and its officers, directors, employees and agents will in no event be liable for any special, incidental, consequential, or any other indirect loss or damage of any nature, including without limitation lost profits or lost revenues, caused to the business or property of Recipient or anyone else arising out of or related to the services, this agreement, Service Providers’s performance of this agreement, any obligations resulting therefrom, and Recipients’s reliance thereon.
-
-The entire, aggregate, and maximum liability, if any, of Service Provider, its officers, directors, employees and agents for any and all claims, losses, damages, or expenses arising out of or related to the services, this agreement, Service Provider’s performance of this agreement, any obligation resulting therefrom, and Recipients’s reliance thereon, shall in no event be greater than the amount paid by Recipient to Service Provider under this agreement.
-
-This limitation of liability is an essential and bargained for part of this agreement, and Service Provider would not perform the services without this limitation. No representative of Service Provider has authority to verbally modify the terms of this limitation.
+Neither Party will not be deemed to be in breach of contract or otherwise responsible for delays or failures in performance resulting from {% if risk_allocation.security_incident_force_majeure == true %} **security incidents identified during the Engagement;** {% endif %} acts of God; acts of war or civil disturbance; epidemics; governmental action or inaction; fires; earthquakes; unavailability of labor, materials, power, or communication; or other causes beyond such Parties reasonable control.
 {% endblock %}
 
 {# DONE #}
@@ -109,7 +102,7 @@ Payments for each invoice delivered by Service Provider to Recipient are due wit
 
 In the event that Recipient fails to remit payment as specified, Service Provider shall have the right to immediately terminate this agreement with no further obligation and retain any monies already paid.
 
-{% if payment.late_fee is not none %}
+{% if payment.late_fee_charged == true %}
 
 ### Late Payment
 
@@ -118,7 +111,7 @@ In the event an invoice is not paid on time, to the maximum extent allowable by 
 {% endif %}
 {% if expenses is not none %}
 
-Recipient shall reimburse all expenses that are reasonable and that have been authorized in writing by Recipient in advance; payable within {{ payment.payment_due_days }} days of itemized invoice. {{ expenses.payment_conditions }}
+Recipient shall reimburse all expenses that are reasonable and that have been authorized in writing by Recipient in advance; payable within {{ payment.payment_due_days }} days of itemized invoice. {{ expenses.basic_payment_conditions }}
 
 Recipient shall reimburse Service Provider for all reasonable out-of-pocket expenses incurred by Service Provider in performing services under this Agreement as long as such expenses are approved by Recipient in advance. Such expenses include, but are not limited to:
 1. third-party expenses for online services, such as hosting and/or computing;
@@ -132,11 +125,11 @@ Recipient shall reimburse Service Provider for all reasonable out-of-pocket expe
 Service Provider is an independent contractor, and neither Service Provider nor Service Provider's staff is, or shall be deemed, Recipient's employees. In its capacity as an independent contractor, Service Provider agrees and represents, and Recipient agrees, as follows:
 1. Service Provider may perform similar services for third Parties using the same personnel that Service Provider may utilize for rendering the Services for Recipient hereunder, subject to Service Provider obligations respecting Recipients’s Confidential Information.
 1. Service Provider has sole discretion to determine how, when, and where to perform services required to achieve the final result specified in the Scope of Work.
-1. The services required by this Agreement shall be performed by Service Provider, Service Provider's staff or subcontractors, and Recipient shall not be required to hire, supervise or pay any assistants to help Service Provider.
+1. The services required by this Agreement shall be performed by Service Provider, {% if agreement.utilizing_third_parties == true %}Service Provider's staff or subcontractors{% else %}or Service Provider's staff{% endif %}, and Recipient shall not be required to hire, supervise or pay any assistants to help Service Provider.
 1. As an independent contractor, Service Provider is not eligible for and has no claim to medical benefits, profit sharing, vacation pay, sick pay, or other benefits offered by Recipient to employees.
 1. Neither Service Provider nor Service Provider's staff shall be required to devote full-time to the performance of the services required by this Agreement.
 1. Recipient shall not provide insurance coverage of any kind for Service Provider or Service Provider's staff.
-{% if (payment.funded == "recipient") or (payment.predefined_rates_for_additional_work == true) %}
+{% if (payment.funded == "recipient") or (payment.recipiant_must_pay_for_additional_service == true) %}
 1. Recipient shall not withhold from Service Provider's compensation any amount that would normally be withheld from an employee's pay.
 {% endif %}
 1. Service Provider, its employees and agents shall be free to use and employ their general skills, know-how, and expertise, and to use, disclose, and employ any generalized ideas, concepts, know-how, methods, techniques or skills gained or learned during the course of any Services performed hereunder, subject to its obligations respecting Recipients’s Confidential Information.
@@ -147,10 +140,13 @@ Service Provider is an independent contractor, and neither Service Provider nor 
 {% block general_provisions %}
 1. Complete Agreement: This Agreement together with all exhibits, appendices or other attachments, which are incorporated herein by reference, is the sole and entire Agreement between the parties. This Agreement supersedes all prior understandings, agreements and documentation relating to such subject matter. In the event of a conflict between the provisions of the main body of the Agreement and any attached exhibits, appendices or other materials, the Agreement shall take precedence.
 1. Modifications to Agreement: Modifications and amendments to this Agreement, including any exhibit or appendix hereto, shall be enforceable only if they are in writing and are signed by authorized representatives of both Parties.
-1. Applicable law: This Agreement will be governed by the laws of {{ disputes.applicable_law }}.
+1. All written notifications must be delivered using {{ termination_with_cause.notification_format }} unless they contain Confidential Information. If written notifications contain Confidential Information they must follow the guidelines set for communications containing confidential information.
+1. Applicable law: This Agreement will be governed by the laws of {{ disputes.choice_of_law }}.
 1. No Agency: Nothing contained herein will be construed as creating any agency, partnership, joint venture or other form of joint enterprise between the Parties.
-1. Assignment: The rights and obligations under this Agreement are freely assignable by either party. {% if (payment.funded == "recipient") or (payment.predefined_rates_for_additional_work == true) %}Recipient shall retain the obligation to pay if the assignee fails to pay as required by this Agreement.{% endif %}
+{% if agreement.utilizing_third_parties == true %}
+1. Assignment: The rights and obligations under this Agreement are freely assignable by either party. {% if (payment.funded == "recipient") or (payment.recipiant_must_pay_for_additional_service == true) %}Recipient shall retain the obligation to pay if the assignee fails to pay as required by this Agreement.{% endif %}
 1. Successors and Assigns: This agreement binds and benefits the heirs, successors and assigns of the parties.
+{% endif %}
 1. Severability: If a court finds any provision of this Agreement invalid or unenforceable, the remainder of this Agreement will be interpreted so as best to carry out the parties’ intent.
 1. Counterparts, Electronic Signatures: This Agreement may be executed in counterparts, each of which shall be deemed an original but all of which together shall constitute one and the same instrument. This Agreement may be signed and delivered by facsimile, .pdf format data file or other electronic transmission, and such electronic signatures shall be deemed original signatures for purposes of enforcement and construction of this Agreement.
 {% endblock %}
@@ -160,31 +156,38 @@ Service Provider is an independent contractor, and neither Service Provider nor 
 {% block sow %}
 The Assessment component of the Engagement will consist of the following phases:
 
-{% for item in engagement.activities %}
+{% for item in activities %}
 #### {{ item.name }}
+* **Begins:** {{ item.begins }}
+* **Duration:** {{ item.duration }}
+{% if item.time != "" %}* **Total Time:** {{ item.time }}{% endif %}
 {{ item.description }}
+{% endfor %}
 
-{%- endfor %}
-#### Update Meetings
-Additionally, the {{ parties.service_provider.designated_contact }} will hold meetings with the {{ parties.recipient.designated_contact }}, {{ engagement.update_meeting_frequency }}, to inform them of the overall progress of the assessment.
+{% if scope_of_work.progress_updates_included == true %}
+#### Status Updates
+
+Additionally, service providers designated contact {% for rep in representatives %}{% if rep.point_of_contact == true %}{% if rep.party == "service_provider" %}{{ rep.name }}{% endif %}{% endif %}{% endfor %} will {% if scope_of_work.status_updates_format == "in_person" %} hold meetings with {{ scope_of_work.status_update_meeting_attendees }}{% else %} provide written status updates to{{ scope_of_work.written_updates_recipients }}{% endif %}, {{scope_of_work.status_updates_frequency}} to inform them of the overall progress of the assessment. Status updates will start {{scope_of_work.status_updates_start}} and will end {{scope_of_work.status_updates_end}}.
+{% endif %}
+
+
+{% if scope_of_work.activities_not_included != "" %}
+### Activities Not Included
+{{ scope_of_work.activities_not_included }}
+{% endif %}
+
 {% endblock %}
 
 {# DONE #}
-{% block assessor_warranties %}
-* Service Provider has the experience and ability to do everything agreed to for Recipient and will do it all in a professional and timely manner. Service Provider will endeavor to meet every deadline and perform the Engagement in accordance with the sector’s best practices.
-* Service Provider understands that Recipient is taking part in this Engagement in support of their work. Service Provider will make every effort to avoid disrupting Recipient's work environment more than is reasonable to conduct an assessment.
-* Service Provider is independent, non‐product affiliated, and not in the business of selling security systems hardware.
-* Because of the nature of the Engagement Service Provider understands that one or more of Recipient's emergency contacts may not have experience using the communication security practices required to support the Engagement. Service Provider will provide documentation on the setup and use of the tools required before the start of the Engagement. Service Provider will also make themself available before and during the Engagement to provide additional guidance as needed to allow them to safely carry out their role.
-{% endblock %}
 
-{# DONE #}
-{% block Recipient_warranties %}
-* Recipient understands that Service Provider is not an employee, and that this will be a collaborative, professional relationship of equals where mutual professional respect, courtesy and consideration are expected.
-* Recipient's personnel will provide the Security Providers with all information requested to complete this engagement in a timely manner.
-* Recipient agrees that the accuracy of information supplied to Service Provider is the sole responsibility of Recipient, and that Service Provider is not responsible and shall not be held liable for the results of services performed on the basis of inaccurate, incomplete or untruthful information furnished by Recipient.
-* Recipient will provide full access to all Recipient participants and personnel, as required, throughout the duration of the engagement.
-* Recipient will provide Service Provider adequate workspace and Internet connections while on site to access email and other online resources.
-* Recipient understands that Service Provider is a business with other clients to serve, and requires fair, realistic notice in order to attend to requests and projects.
+{% block warranties %}
+
+For the purpose of this Agreement, commitments, warranties and representations include, in addition to those agreed to for the entire schedule contract:
+
+{% for item in representations_and_warranties %}
+* {{ item.statement }}
+{% endfor %}
+
 {% endblock %}
 
 {# DONE #}
@@ -192,37 +195,41 @@ Additionally, the {{ parties.service_provider.designated_contact }} will hold me
 
 Service Provider will provide the following deliverables to Recipient.
 
-{% for item in deliverables.deliv_items %}
-* {{ item }}
+{% for item in deliverables %}
+#### {{ item.name }} {% if item.considered_confidential == "yes" %}- CONFIDENTIAL{% endif %}
+**Due:** {{ item.date_of_delivery }}
+**Purpose:** {{ item.purpose_of_deliverable }}
+**Description:** {{ item.specifications }}
 {%- endfor %}
 
-{% if deliverables.includes_report is not none %}
 
-The report will contain {{ deliverables.report.assessment_report_components }}.
+{% if termination_with_cause.notice_of_delays == true %}
+### Notifice of Delays
 
-Service Provider will tailor the report for its targeted audiences in the following ways:
-{% for item in deliverables.report.targeting %}
-* {{ item }}
-{%- endfor %}
+Service Provider will use all reasonable efforts to deliver the Deliverables on schedule. However, at its option, Service Provider can extend the due date for any Deliverable and/or Milestone by giving written notice to Recipient. This notice must be provided to Recipient {{ termination_with_cause.notification_days_before_deadline }} days before the Deliverable due date. The total of all such extensions shall not exceed {{ termination_with_cause.max_num_of_extension_delays }} days.
 {% endif %}
 
-Recipient can request up to {{ deliverables.revisions.number_allowed }} revisions to a deliverable.
 
-{% if payment.funded == "recipient" %}
-{% if payment.assessor_provides_additional_service == true %}
+### Revisions to Deliverables
 
-Beyond the included {{ deliverables.revisions.number_allowed }} round(s) of revisions per document client requested revisions will be billed at {{ payment.assessor_additional_revision_rate }} with a minimum duration of {{ deliverables.revisions.minimum_billable_period }} of work.
+Recipient can request up to {{ scope_changes.number_of_free_revisions_allowed }} revisions to a deliverable.
 
-{% endif %}
+{% if (payment.funded == "recipient") or (scope_changes.paid_recipiant_requested_revisions == true) %}
+{% if scope_changes.unpaid_recipiant_requested_revisions == true %}
+Beyond the included {{ scope_changes.number_of_free_revisions_allowed }} round(s) of revisions{% else %}Any round(s) of revisions that are requested {% endif %} will be billed at the following rates.
+
+|Service|Description|Hourly Rate| Minimum Hours |
+| --------------------------- | --------------------------------------------------- | --------- | ---------: |{% for item in rates %}{% if item.work_type == "deliverable_revision" %}
+| {{ item.name }} | {{ item.description }} | {{ item.hourly_rate }} | {{ item.base_num_hours }} |{% endif %}{%- endfor %}
+
 {% endif %}
 {% endblock %}
-
 
 {# DONE #}
 {% block schedule %}
 |Activity|Estimated Start Date|Estimated Duration|
-| --------------------------- | --------------------------- | --------------------------- |{% for item in engagement.activities %}
-| {{ item.name }} | {{ item.begins }} | {{ item.length }} |
+| --------------------------- | --------------------------- | --------------------------- |{% for item in activities %}
+| {{ item.name }} | {{ item.begins }} | {{ item.duration }} |
 {%- endfor %}
 {% endblock %}
 
@@ -232,11 +239,11 @@ Beyond the included {{ deliverables.revisions.number_allowed }} round(s) of revi
 Payments will be made to Service Provider for completion of milestones in accordance with the following payment schedule.
 
 |Milestone|Estimated Completion Date|Payment Due on Delivery|
-| --------------------------- | --------------------------------------------------- | ---------: |{% for item in pricing.milestones %}
-| {{ item.name }} | {{ item.date }} | {{ item.price }} |
+| --------------------------- | --------------------------------------------------- | ---------: |{% for item in milestones %}
+| {{ item.name }} | {{ item.completion_date }} | {{ item.price }} |
 {%- endfor %}
 | --------------------------- | --------------------------- | --------------------------- |
-| Total |  | {{ pricing.milestones|sum(attribute='price') }} |
+| Total |  | {{ milestones|sum(attribute='price') }} |
 {% endblock %}
 
 {# DONE #}
@@ -244,16 +251,17 @@ Payments will be made to Service Provider for completion of milestones in accord
 
 Agreed upon work beyond the initial "Scope of Work" will be billed at the following rates.
 
-|Activity|Comments|Hourly Rate|
-| --------------------------- | --------------------------------------------------- | ---------: |{% for item in pricing.rates %}
-| {{ item.name }} | {{ item.comments }} | {{ item.hourly_rate }} |
+|Service|Description|Hourly Rate| Minimum Hours |
+| --------------------------- | --------------------------------------------------- | --------- | ---------: |{% for item in rates %}
+| {{ item.name }} | {{ item.description }} | {{ item.hourly_rate }} | {{ item.base_num_hours }} |
 {%- endfor %}
+
 {% endblock %}
 
 {# DONE #}
 {% block incident_response %}
 
-If either Party identifies an information security incident ("Information Security Incident") during the Engagement they will suspend any assessment activities and inform the emergency contact(s) provided by the other party using one of the approved methods for secure communication within {{ incident_response.disclosure_period }}. Information security incidents include a suspected, successful, or imminent threat of unauthorized access, use, disclosure, breach, modification, theft, loss, corruption, or destruction of information; interference with information technology operations; or interference with system operations
+If either Party identifies a suspected or known security incident during the Engagement (such as previous or active compromise to the Recipient's systems) they will suspend any assessment activities and inform the emergency contact(s) provided by the other party using one of the approved methods for secure communication within {{ incident_response_and_handling.disclosure_period }}. Information security incidents include a suspected, successful, or imminent threat of unauthorized access, use, disclosure, breach, modification, theft, loss, corruption, or destruction of information; interference with information technology operations; or interference with system operations.
 
 The extent to which assessment activities will be suspended, and the degree to which incidents must be addressed for activities to continue will be decided per-incident based upon an agreement by both parties.
 
@@ -270,47 +278,78 @@ The Parties ability to be able to get in touch in an emergency is vital. Emergen
 
 **Recipient Contacts**
 
-|Full Name|Phone Number|Secure Channel|
-| --------------------------- | --------------------------- | --------------------------- |{% for item in parties.recipient.emergency_contacts %}
-| {{ item.name }} | {{ item.phone_number }} | {{ item.secure_channel }} |
-{%- endfor %}
+|Full Name|Immediete Contact|Immediete Contact|Secure Data Transfer|
+| --------------------------- | --------------------------- | --------------------------- | --------------------------- |{% for rep in representatives %}{% if rep.party == "recipient" %}{% if rep.emergency_contact == true %}
+| {{ rep.name }} | {{ rep.form_of_immediate_contact_one }} | {{ rep.form_of_immediate_contact_two }} | {{ rep.secure_data_transfer }} |{% endif %}{% endif %}{% endfor %}
+
 
 **Service Provider Contacts**
 
-|Full Name|Phone Number|Secure Channel|
-| --------------------------- | --------------------------- | --------------------------- |{% for item in parties.service_provider.emergency_contacts %}
-| {{ item.name }} | {{ item.phone_number }} | {{ item.secure_channel }} |
-{%- endfor %}
+|Full Name|Immediete Contact|Immediete Contact|Secure Data Transfer|
+| --------------------------- | --------------------------- | --------------------------- | --------------------------- |{% for rep in representatives %}{% if rep.party == "service_provider" %}{% if rep.emergency_contact == true %}
+| {{ rep.name }} | {{ rep.form_of_immediate_contact_one }} | {{ rep.form_of_immediate_contact_two }} | {{ rep.secure_data_transfer }} |{% endif %}{% endif %}{% endfor %}
 
 ### Service Provider Role in Addressing Incidents
-
 When a security incident has been identified the Parties will come to an agreement as to whether the incident should be addressed immediately, or should be addressed after the Engagement.
 
-{% if incident_response.assessor_mitigate_incident == true %}
+{% if incident_response_and_handling.sp_must_support_incident_response == true %}
 
 If the Parties decide that the security incident should be addressed immediately Service Provider will mitigate, to the extent practicable, the harmful effects of the security incident that are known to Service Provider; and document security incidents and their outcomes.
 
-{% elif incident_response.assessor_refer_incident == true %}
+{% elif incident_response_and_handling.paid_incident_response_support_provided == true %}
 
-If the Parties decide that the security incident should be addressed immediately Service Provider will work with Recipient to identify and contact an appropriate third-party who can mitigate, to the extent practicable, the harmful effects of the security incident that are known to Service Provider; and document security incidents and their outcomes. At this point the Parties will determine the extent to which Service Provider should continue assessment activities.
+If the Parties decide that the security incident should be addressed immediately the recipiant can request that this Agreement be ammended to include these activities.
+
+|Service|Description|Hourly Rate| Minimum Hours |
+| --------------------------- | --------------------------------------------------- | --------- | ---------: |{% for item in rates %}{% if item.work_type == "incident_response" %}
+| {{ item.name }} | {{ item.description }} | {{ item.hourly_rate }} | {{ item.base_num_hours }} |{% endif %}{%- endfor %}
+
+
+{% elif incident_response_and_handling.sp_must_support_incident_referrals == true %}
+
+If the Parties decide that the security incident should be addressed immediately Service Provider will work with the Recipient to identify and contact an appropriate third-party who can mitigate, to the extent practicable, the harmful effects of the security incident that are known to Service Provider; and document security incidents and their outcomes. At this point the Parties will determine the extent to which Service Provider should continue assessment activities.
+
+{% elif incident_response_and_handling.paid_sp_supported_incident_referrals == true %}
+
+If the Parties decide that the security incident should be addressed immediately the recipiant can request that this Agreement be ammended to include Service Provider support for the Recipiant in identifying and contacting an appropriate third-party who can mitigate, to the extent practicable, the harmful effects of the security incident that are known to Service Provider; and document security incidents and their outcomes.
+
+|Service|Description|Hourly Rate| Minimum Hours |
+| --------------------------- | --------------------------------------------------- | --------- | ---------: |{% for item in rates %}{% if item.work_type == "incident_referral" %}
+| {{ item.name }} | {{ item.description }} | {{ item.hourly_rate }} | {{ item.base_num_hours }} |{% endif %}{%- endfor %}
+
 
 {% endif %}
 
+{% if scope_of_work.active_technical_measures == true %}
+### Incidents Triggered by Assessment Activities
+
+The Service Provider commits to prioritizing the stability and integrity of the Recipiant's digital infrastructure over any additional testing could be carried through more aggressive methods.
+
+No tests will be performed that would stress the network, or any individual workstation, beyond what could be expected from normal use. If Service Provider has any doubt, Service Provider will consult with Recipient before carrying out the test.
+
+In the unlikely event that Service Provider causes network or system disruption/damage, any active procedures will be terminated. Service Provider will then follow the security incident procedures described above.
+{% endif %}
+
+{% if incident_response_and_handling.recipiant_controls_incident_disclosure_to_third_parties == true %}
 ### External Notification and Communication
 
 Service Provider agrees that it shall not inform any third party of any Information Security Incident without first obtaining Recipient’s prior written consent, other than to inform a complainant that the matter has been forwarded to Recipient. Further, Service Provider agrees that Recipient shall have the sole right to determine: (i) whether notice of the Information Security Incident is to be provided to any individuals, regulators, law enforcement agencies, consumer reporting agencies or others as required by law or regulation, or otherwise in Recipient’s discretion; and (ii) the contents of such notice, whether any type of remediation may be offered to affected persons, and the nature and extent of any such remediation.
+{% endif %}
 {% endblock %}
 
 {# DONE #}
 {% block priv_sec %}
 
-During the term of this Agreement and for {{ privsec.confidentiality_term_years }} years afterward, each party will use reasonable care to prevent the unauthorized use or dissemination of the other party's Confidential Information. Reasonable care means that each party treats the other party's data with at least the same degree of care that a party uses to protect its own confidential information from unauthorized disclosure.
+During the term of this Agreement and for {{ confidentiality.confidential_information_sunset_years }} years afterward, each party will use reasonable care to prevent the unauthorized use or dissemination of the other party's Confidential Information. Reasonable care means that each party treats the other party's data with at least the same degree of care that a party uses to protect its own confidential information from unauthorized disclosure.
 
 Confidential Information is limited to:
 
-* information about the Recipants’s business or computer systems or security situation that Service Provider obtains during the course of it’s work (including, but not limited to all security findings, results, and recommendations);
-* information about this contract, contract terms, or contract fees; and
-* information clearly marked as confidential, or disclosed orally that is treated as confidential when disclosed and summarized and identified as confidential in a writing delivered to the receiving party within {{ privsec.days_for_confidential_notice }} days of disclosure.
+{% if confidentiality.agreement_is_considered_confidential %}
+* information about this contract, contract terms, or contract fees;
+{% endif %}
+* information about the Recipants’s business or computer systems or security situation that Service Provider obtains during the course of it’s work (including, but not limited to all security findings, results, and recommendations); and
+* information clearly marked as confidential, or disclosed orally that is treated as confidential when disclosed and summarized and identified as confidential in a writing delivered to the receiving party within {{ confidentiality.timeline_for_confidential_info_notice }} days of disclosure.
+
 
 Confidential information does not include information that:
 
@@ -321,25 +360,20 @@ Confidential information does not include information that:
 
 Where disclosure to a third party is essential, the party wishing to disclose the information shall obtain prior written authorization to do so from the other party.
 
-{% if payment.funded == "third party" %}
-{% if privsec.external_funder.access == true %}
+{% if confidentiality.confidential_info_shared_with_third_parties == true %}
 
-### Funder Information Sharing
+### Third Party Information Sharing
 
-Service Provider is able to provide the following information to the third-party funder of the Engagement (the "Funder").
+Service Provider is able to provide {{ confidentiality.information_to_be_shared_with_third_parties }} (the "Third Party")to {{ confidentiality.third_parties_with_access_to_confidential_information }}.
 
-{% for item in privsec.external_funder.information_disclosed %}
-* {{ item }}
-{%- endfor %}
+All information provided to the Third Party will comply with the same Communications Security practices described in the next section.
 
-The Funder has agreed to comply with the Communications Security practices outlined in the "Information Security Safeguards" Section when receiving the above information.
+Service Provider will take the following additional actions to reduce any risk to the Recipient when sharing this information.
 
-Service Provider will take the following additional actions to reduce any risk to Recipient when sharing this information.
+{% for item in data_handling %}{% if item.reponsible_parties == "third_parties" %}{% if item.security_focus == "communications"%}
+* {{ item.guideline }}
+{% endif %}{% endif %}{%- endfor %}
 
-{% for item in privsec.external_funder.additional_security %}
-* {{ item }}
-{%- endfor %}
-{% endif %}
 {% endif %}
 
 ### Judicial Requests or Other Government Orders
@@ -351,54 +385,55 @@ In the event either party is required to disclose Confidential Information pursu
 {% block safeguards %}
 
 ### Device Security
+
 Service Provider will secure all the devices they will use for the assessment. This includes
-{% for item in privsec.device_security %}
-* {{ item }}
-{%- endfor %}
+{% for item in data_handling %}{% if item.reponsible_parties == "service_provider" or item.reponsible_parties == "both" %}{% if item.security_focus == "devices" %}
+* {{ item.guideline }}
+{% endif %}{% endif %}{%- endfor %}
 
-#### Communications Security
+### Communications Security
 
-It will often be essential that confidential information be shared between Recipient and Service Provider. In these situations, the Parties will adhere to the following standards:
-- Any confidential information shared between the Parties via email must be encrypted.
-- Any deliverables containing confidential information must be encrypted and password-protected.
-- All passwords used for deliverables will meet or exceed complex password standards.
-- Any passwords that need to be communicated will be communicated in person or via an encrypted voice and/or video platform.
+It will often be essential that confidential information be shared between the Recipient and Service Provider. In these situations, the Parties will adhere to the following standards:
+{% for item in data_handling %}{% if item.reponsible_parties == "both" %}{% if item.security_focus == "communications" %}
+* {{ item.guideline }}
+{% endif %}{% endif %}{%- endfor %}
 
-### Data Destruction
+### Data Storage and Destruction
 
-{% if context.on_site_activities %}
-
-At the conclusion of the on-site portions of the Engagement, all engagement workpapers and hardcopy documents will be digitized, encrypted and stored on a secure file server by Service Provider. Service Provider will destroy the above hardcopy documents using the destruction practices described below.
-
+The Service Provider will create and collect a range of confidential information during the assessment. The Service Provider will adhere to the following standards in regards to the storage and destruction of data and documents containing confidential information:
+{% for item in data_handling %}{% if item.reponsible_parties == "service_provider" or item.reponsible_parties == "both" %}{% if item.security_focus == "data" %}
+* {{ item.guideline }}
+{% endif %}{% endif %}{%- endfor %}
+{% if scope_of_work.on_site_assessment_activities %}
+* At the conclusion of the on-site portions of the Engagement, all engagement workpapers and hardcopy documents will be digitized, encrypted and stored on a secure file server by Service Provider. Service Provider will destroy the above hardcopy documents using the destruction practices described below.
 {% endif %}
+* Service Provider will destroy all confidential material they still have in their possession {{ secure_data_handling.data_retention_period }} after the Engagement.
 
-Service Provider will destroy all confidential material {{ privsec.data_retention_period }} after the Engagement.
-
-When destroying confidential material Service Provider will permanently delete all electronic data from all Service Provider’ devices and hardcopy documents containing confidential information will be destroyed by shredding, tearing in small pieces, and/or burning.
+The Recipient will is likely to be provided sensitive information as a part of this assessment. The Recipient will adhere to the following standards in regards to the storage and destruction of data and documents containing confidential information:
+{% for item in data_handling %}{% if item.reponsible_parties == "recipent" or item.reponsible_parties == "both" %}{% if item.security_focus == "data" %}
+* {{ item.guideline }}
+{% endif %}{% endif %}{%- endfor %}
 
 ### Authorized Recipients Of Confidential Information
 
-The above "Confidential Information" and "Information Security Safeguards" statements define the entire agreement between the involved parties concerning the circulation and disclosure of Confidential Information.
+The above "Privacy and Security" and "Safeguards to Protect Confidential Data and Communications" statements define the entire agreement between the involved parties concerning the circulation and disclosure of Confidential Information.
 
 The receiving parties agree not to disclose such information to any party not defined in this document as an ”authorized” party.
 
-{% if payment.funded == "third party" %}
-{% if privsec.external_funder.access == true %}
-The third parties identified in the "Funder Information Sharing" subsection to the "Confidential Information" Section are considered “authorized” parties for the specific pieces of information outlined in that Section.
-{% endif %}
+{% if confidentiality.confidential_info_shared_with_third_parties == true %}
+The third parties identified in the Exceptions subsection to the Privacy and Security section are considered “authorized” parties for the speicfic pieces of information outlined in that section
 {% endif %}
 
 By signing below, the authorized parties signify that they understand and agree to the terms of this legally binding document.
 
-**Authorized Recipients Of Confidential Information**
+Authorized Recipients Of Confidential Information
+
 
 | Party     |Full Name    |Signature |
-| --------------------------- | --------------------------- | --------------------------- |{% for item in parties.recipient.emergency_contacts %}
+| --- | --- | --- |{% for rep in representatives %}{% if rep.access_confidential_information == true %}{% if rep.party == "recipient" %}
 | | |
-| Recipient | {{ item.name }} | _______________________ |
-{%- endfor %}{% for item in parties.service_provider.emergency_contacts %}
+| Recipiant | {{ rep.name }} | _______________________ |{% endif %}{% endif %}{% endfor %}{% for rep in representatives %}{% if rep.access_confidential_information == true %}{% if rep.party == "service_provider" %}
 | | |
-| Service Provider  | {{ item.name }} | _______________________ |
-{%- endfor %}
+| Service Provider | {{ rep.name }} | _______________________ |{% endif %}{% endif %}{% endfor %}
 
 {% endblock %}

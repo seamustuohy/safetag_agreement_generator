@@ -1,0 +1,11 @@
+name,work_type,base_num_hours,description,hourly_rate
+"Malware Analysis","incident_response",2,"Service Provider provides reverse engineering and malware analysis at a variety of technical levels. From simple identification and triage to detailed targeted analysis.", 100
+"Illustration Creation","deliverable_revision",3,"The creation of explanatory and/or educational illustrations", 50
+"Content Updates/Additions","deliverable_revision",2,"Updates and/or additions to text based content in a report.", 100
+"Referral Support","incident_referral",2,"Supporting Recipient in the identification of appropriate third party incident response service providers",100
+"IR Human Resources Support","incident_referral",2,"Service Provider supporting Recipients HR in the creation of job descriptions, candidate interviewing, and other administrative tasks",100
+"Consulting – Principal","",2,"Consulting on strategy and security architecture specification.",100
+"Consulting - Policy/Practice","",2,"Consulting on security policy and practice development.",100
+"System Configuration","",2,"Configure networks, systems, and software to respond to identified vulnerabilities",100
+"Training","",2,"Provide security training's on identified topics",100
+"Development","",2,"Writing security budgets and grant and proposal language.",100

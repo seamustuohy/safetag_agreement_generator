@@ -28,6 +28,28 @@ Install Jinja2
 sudo -H pip3 install Jinja2
 ```
 
+Install DataPackage (1.0)
+This was written right before the 1.0 breaking release of datapackage. If your version of pip has the 1.0+ version of data package in it you can install it using pip. ```sudo -H pip3 install datapackage``` If it does not, then you will have to follow the below instructions.
+```
+cd /tmp
+git clone https://github.com/frictionlessdata/datapackage-py.git
+cd datapackage-py
+sudo -H python3 setup.py install
+```
+
+
+Agreement Decision QuickStart: Interactive Graphical User Interface (GUI)
+-------------------------------------------------------------------
+
+The SAFETAG agreement generator includes an interactive agreement decision making tool that allows assessors to more easily customize their agreements to match their recipient, context, activities, fees, and a variety of other factors. This GUI can be started by running the following command.
+
+```
+python3 make_agreement.py
+```
+
+
+Once the Assessor has finished entering data in the GUI a new "custom variable" file will be create in the "variables" folder. It will be named `custom_[DATE]_[TIME].json` (for example: `custom_2017_Sep_10_13_17.json`.) You can learn more about the structure of this variable file in the **Variable Files** section below.
+
 
 Assessment Agreement Templates
 ------------------------------
@@ -61,25 +83,22 @@ The repository comes with an example plain language template. It includes a "bas
 The PDF and Markdown versions of these outputs can be found in the `outputs` directory.
 
 ```
-└── outputs
-    ├── plain_example.md
-    └── plain_example.pdf
-```
-
-The variable files used to populate the fake data used in this template can be found in the variables directory. The fake data is not intended to be seen as guidance, or even as a 'good' example of an assessment.
+├── outputs
+│   ├── plain_custom.md
+│   └── plain_custom.pdf
 
 ```
-└── variables
-    └── plain_example.py
-```
 
-#### Creating Plain Templates
+#### Creating Plain Agreements
 
-If you have changed a plain variable file or template you can re-compile the outputs by running the agreement maker.
+If you have used the GUI to create a new decisions file or you have customized the template you can re-compile the outputs by running the agreement maker.
 
 ```
-python3 make_agreement.py
+python3 make_agreement.py -p variables/my_custom_agreement_decisions.json -a plain
 ```
+
+*If you don't use the -a flag it will produce both the explicit and plain custom agreements.*
+
 
 ### Explicit Rights and Responsibility Statement Templates
 
@@ -105,45 +124,66 @@ The PDF and Markdown versions of these outputs can be found in the `outputs` dir
 
 
 ```
-└── outputs
-    ├── explicit_example.md
-    └── explicit_example.pdf
+├── outputs
+│   ├── explicit_custom.md
+│   └── explicit_custom.pdf
+
 ```
 
-The variable files used to populate the fake data used in this template can be found in the variables directory. The fake data is not intended to be seen as guidance, or even as a 'good' example of an assessment.
+#### Creating Explicit Agreements
+
+If you have used the GUI to create a new decisions file or you have customized the template you can re-compile the outputs by running the agreement maker.
+
+```
+python3 make_agreement.py -p variables/my_custom_agreement_decisions.json -a explicit
+```
+
+*If you don't use the -a flag it will produce both the explicit and plain custom agreements.*
+
+
+
+### Variable Files: Agreement Entities & Custom Meta-Data
+
+The templates use "variable" files to include or exclude specific agreement sections and populate the contents of an agreement. These variable files come in two forms "Entities" and "Custom Meta-Data". The "Custom Meta-Data" file is what is populated by the SAFETAG agreement generator. The "Entities" are CSV (Comma Separated Value) files that you fill with structured data about different aspects of your agreement.
+
+#### The Example Variable Files
+
+The variable files used to populate the fake data used in the example outputs can be found in the variables directory. **The fake data is not intended to be seen as guidance or even as examples of 'appropriate practice'.** These variable files can be used to see exactly how the templates were filled in.
+
 
 ```
 └── variables
-    └── explicit_example.py
-```
-
-
-#### Creating Explicit Templates
-
-If you have changed an explicit variable file or template you can re-compile the outputs by running the agreement maker.
-
-```
-python3 make_agreement.py
-```
-
-### Meta-Data
-
--   Meta-data for each template that associate it to the broad assessment concepts and/or activities that rely on it.
-
-Each of these Assessment Agreement Templates will be accompanied by meta-data that will allow future modules to automatically include or exclude specific agreement sections based upon the activities or excises that are used in an assessment.
-
-For example; a meta-data tag for \*network-scanning\* could be assigned to exercises where the assessor is using software to scan the internal networks of an organization. The agreement language that is tagged network-scanning would include sections on data retention, emergency contacts, incident response, and liability for assessor induced system failures.
-
-#### Where can I find the meta-data?
-
-The structure of the meta-data to be used in SAFETAG is still in active flux. As such, it is more important to **show** the meta-data in action, than to assign a taxonomy to the text that would later have to be translated into another meta-data format. As such, the decision was made to represent the meta-data within this project as a combination of "conditional statements" found in the Jinja2 templates and user-assigned "variables" that are used to drive the document creation.
-
-The template files use conditional statements to include (or not) different blocks of text based upon the variable file. In the following example the template looks to see if there is an expenses section in the variables file. If there is an expenses section then the markdown text within the conditional will be included. If there is not, it won't be included.
+    ├── entities
+    │   ├── activities.csv
+    │   ├── data_handling.csv
+    │   ├── deliverables.csv
+    │   ├── milestones.csv
+    │   ├── rates.csv
+    │   ├── representations_and_warranties.csv
+    │   └── representatives.csv
+    └── custom_example.json
 
 ```
-{% if expenses is not none %}
-* expenses already incurred, including those from documented non-cancelable commitments. Assessor agrees to use the best efforts to minimize such costs and expenses.
-{% endif %}
+
+
+#### Entity Variable Files
+
+The Entity variable files are used by an auditor to
+
+These variable files are accompanied by a [Data Package](http://frictionlessdata.io/data-packages/) `variables/datapackage.json` that describes each of their formats and provides guidance on what each field within them should contain. When the agreement is being created this data-package is also used to validate that these Entity files are properly formatted. ([It follows the Tabular Data Package structure.](http://frictionlessdata.io/guides/tabular-data-package/))
+
+```
+└── variables
+    ├── entities
+    │   ├── activities.csv
+    │   ├── data_handling.csv
+    │   ├── deliverables.csv
+    │   ├── milestones.csv
+    │   ├── rates.csv
+    │   ├── representations_and_warranties.csv
+    │   └── representatives.csv
+    └── datapackage.json
+
 ```
 
 #### Customizing Meta-Data
@@ -158,47 +198,97 @@ Meta-Data files are contained in the `variable` directory.
 
 Each of these files is structured as a python object. Any additions to the meta-data need to be added to the `objects` dictionary. All variables that are used by the templates are found within this dictionary.
 
-Agreement Decision Trees
-------------------------
-
-A set of decision support tools for SAFETAG agreement creation.
-
--   Structured data files (e.g. JSON, CSV, etc.) for an “agreement wide decision tree” and “section level decision trees” for each of its sections.
-
--   Source code that transforms the structured data into a visualization of the decision trees.
-
-Agreement Decision Trees will allow assessors to more easily customize their agreements to match their assessment activities.
-
-These decision trees will provide a SAFETAG assessor with a tree-like model of key decisions to be made based upon the structure of their assessment and relationship with the recipient. Each decision tree will, once analyzed, indicate the appropriate template language that an assessor should include in their agreement. These decision trees will reduce the complexity of the current agreement creation process and support the future modularity of SAFETAG content.
-
-The decision trees will not provide the costs and benefits for each decision in the tree. These trade-offs differ widely based upon the context of an assessment. Just a few of the complex considerations that make this a such a complex task include an assessor’s relationship with an organization, the type of assessment being provided, and the source of funding.
-
-#### Default Decision Trees (TODO)
-
-#### Creating Decision Trees (TODO)
 
 
-Project Structure
------------------
+#### Agreement Decision Trees
+
+The SAFETAG agreement generator includes an interactive agreement decision making tool that allows assessors to more easily customize their agreements to match their assessment activities.
+
+The GUI transforms a structured decision tree file `variables/decision.json` into an interactive decision support tool where an Assessors decisions determine the agreement that will be created and the information they have to provide.
 
 ```
-.
-├── LICENSE
-├── make_agreement.py
-├── outputs
-│   ├── explicit_example.md
-│   ├── explicit_example.pdf
-│   ├── plain_example.md
-│   └── plain_example.pdf
-├── README.md
-├── templates
-│   ├── explicit_base.j2
-│   ├── explicit.j2
-│   ├── plain_base.j2
-│   └── plain.j2
 └── variables
-    ├── explicit_example.py
-    ├── __init__.py
-    └── plain_example.py
+    └── decisions.json
 
+```
+
+
+* question: The question to as the user.
+* help: Help text to show the user when answering this question.
+* sets: The variable name to assign this decision to.
+
+```json
+  "term_of_contract": [
+    {
+      "question": "What is the start date of the Agreement?",
+      "help": "The start date of the Agreement is not necessarily the start date of the Assessment.",
+      "sets": "agreement_start_date"
+    },
+```
+
+* answers: Multiple choice answers to choose from. (dict)
+  * {"user facing description":"value to set variable to when chosen"}
+
+```json
+    {
+      "question": "What event(s) will signal that the agreement is completed?",
+      "sets": "event_that_completes_agreement",
+      "answers": {
+        "A certain date": "date",
+        "The scope of work and deliverables are complete": "sow",
+        "Both the date and the completion of deliverables and scope of work": "both"
+      }
+    }
+```
+
+* depends: Answer/Value pairs from this section that determine if a question is asked (dict)
+  * {"previous question `sets` variable name", "value it must be set to to show this question"}
+  * Special Option: "type"
+    * The "type" option allows you to determine if multiple variables in the depends section are evaluated using an "and" operation "depends on X and Y" or a "or" operation "depends on X or Y".
+    * {"type": "or"}
+
+```json
+    {
+      "question": "What is the end date of the Agreement",
+      "sets": "agreement_end_date",
+      "depends": {
+        "type": "or",
+        "event_that_completes_agreement": "both"
+      }
+    }
+```
+
+
+* from_package: The datapackage that this question represents.
+  * {"name": "the datapackages name according to the datapackage.json file"}
+  * Special Option: "conditions"
+    * The "conditions" option defines a subset of values from a datapackage that should be used (uses an "and" operation.)
+    * "conditions" { "work_type": "deliverable_revision" }
+    * *NOTE: This does nothing in the current GUI based implementation. The text user interface (TUI) has code that would parse these operations and set them to the from_package variables. But, this logic currently resides in the Jinja template files.*
+* take_input: Should this decision show up in the user interface? Set to false if the decision is a datapackage. (bool)
+
+
+```json
+    {
+      "question": "What guidelines will be followed for securing devices used during the assessment?",
+      "help": "You need to set these in the data_handling.csv file using \"devices\" in the \"security focus\" column and \"service_provider\", \"recipiant\", or \"both\" in the \"responsible_parties\" column depending upon the responsible party",
+      "from_package": {
+        "name": "data_handling",
+        "conditions": {
+          "security_focus": "devices"
+        }
+      },
+      "sets": "device_security_guidelines",
+      "take_input": false
+    },
+```
+
+#### Putting Meta-Data Files to work with Templates
+
+The Meta-Data created by the Agreement GUI is put to work as a combination of "conditional statements" found in the Jinja2 templates. The template files use conditional statements to include (or not) different blocks of text based upon the variable file. In the following example the template looks to see if there is an expenses section in the variables file. If there is an expenses section then the markdown text within the conditional will be included. If there is not, it won't be included.
+
+```
+{% if expenses is not none %}
+* expenses already incurred, including those from documented non-cancelable commitments. Assessor agrees to use the best efforts to minimize such costs and expenses.
+{% endif %}
 ```

@@ -1,0 +1,7 @@
+party, name, title, authorized_representative, point_of_contact, access_confidential_information, emergency_contact, form_of_immediate_contact_one, form_of_immediate_contact_two, secure_data_transfer
+"recipient","Zou Woei-wan","CEO",true,false,true,false,"","",""
+"service_provider","Anicetas Švedas","Director",true,false,false,false,"","",""
+"service_provider","Chun Sang-jin","Lead Assessor",false,true,true,true,"Cell Phone: +1-555-264-0798","Home Phone: +1-555-245-7091","OnionShare"
+"recipient","Maral Mansur","IT Director",false,true,true,true,"Cell Phone: +1-555-524-9078","Home Phone: +1-555-254-0971","OnionShare"
+"recipient","Zou Woei-wan","HR Lead",false,false,true,true,"Cell Phone: +1-555-884-1412","Home Phone: +1-555-884-5793","Peerio"
+"service_provider","Martínez Buentello","Jr. Assessor",false,false,true,true,"Cell Phone: +1-555-657-0228","Signal (iPod): +1-555-675-2082","Peerio"

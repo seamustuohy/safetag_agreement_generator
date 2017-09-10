@@ -28,9 +28,11 @@ The Service Provider will provide a security assessment as outlined in the attac
 
 {% block acceptance_of_deliverables %}{% endblock %}
 
+{% if payment.assessor_provides_additional_service == true %}
 ## Additional Work and Addressing Vulnerabilities
 
 {% block future_work %}{% endblock %}
+{% endif %}
 
 ## Termination of Agreement or Statements of Work
 
@@ -40,20 +42,42 @@ The Service Provider will provide a security assessment as outlined in the attac
 
 {% block disputes %}{% endblock %}
 
+{% if disputes.losing_party_pays_winner == true %}
 ## Attorney Fees
 {% block attorney_fees %}{% endblock %}
+{% endif %}
 
 ## Force Majeure
 
 {% block force_majeure %}{% endblock %}
 
+{% if limitations_on_liability.limitations_on_liability != "" %}
+## Limitations on Liability
+{% block liability %}
+{{ limitations_on_liability.limitations_on_liability }}
+{% endblock %}
+{% endif %}
+
+{% if indemnities.indemnities != "" %}
+## Indemnification
+{% block indem %}
+{{ indemnities.indemnities }}
+{% endblock %}
+{% endif %}
+
+{% if assignment.ownership_of_work_product != "" %}
+## Ownership of Work Product
+{% block ownership_of_work_product %}
+{{ assignment.ownership_of_work_product }}
+{% endblock %}
+{% endif %}
+
+{% if survival.survival_clause != "" %}
 ## Survival
-
-{% block survival %}{% endblock %}
-
-## Limited Liability
-
-{% block indem_and_liability %}{% endblock %}
+{% block  survival_clause %}
+{{  survival.survival_clause }}
+{% endblock %}
+{% endif %}
 
 {% if payment.funded == "recipient" %}
 ## Payment
@@ -72,39 +96,50 @@ The Service Provider will provide a security assessment as outlined in the attac
 
 {% block signatures %}
 
-The terms and conditions of this Agreement may be modified or amended as necessary only by written instrument signed by both parties. By signing this Agreement, I indicate that I understand, agree to and accept the terms and conditions listed above and in all referenced documents throughout, dated {{ agreement.date }}.
+The terms and conditions of this Agreement may be modified or amended as necessary only by written instrument signed by both parties. By signing this Agreement, I indicate that I understand, agree to and accept the terms and conditions listed above and in all referenced documents throughout, dated {{ term_of_contract.agreement_start_date }}.
 
 **Service Provider**
 
-- Name: {{ parties.service_provider.representative.name }}
+{% for rep in representatives %}
+{% if rep.party == "service_provider" %}
+{% if rep.authorized_representative == true %}
 
-- Title: {{ parties.service_provider.representative.title }}
+- Name: {{ rep.name }}
+
+- Title: {{ rep.title }}
 
 - Date: ___________________________
 
 - Signature: ___________________________
+
+{% endif %}
+{% endif %}
+{% endfor %}
 
 **Recipient**
 
-- Name: {{ parties.recipient.representative.name }}
+{% for rep in representatives %}
+{% if rep.party == "recipient" %}
+{% if rep.authorized_representative == true %}
 
-- Title: {{ parties.recipient.representative.title }}
+- Name: {{ rep.name }}
+
+- Title: {{ rep.title }}
 
 - Date: ___________________________
 
 - Signature: ___________________________
+
+{% endif %}
+{% endif %}
+{% endfor %}
 
 {% endblock %}
 
 # Rules of Engagement
 
-## Service Provider Representations and Warranties
-
-{% block assessor_warranties %}{% endblock %}
-
-## Recipiant Representations and Warranties
-
-{% block recipiant_warranties %}{% endblock %}
+## Representations and Warranties
+{% block warranties %}{% endblock %}
 
 ## Scope of Work
 {% block sow %}{% endblock %}
@@ -114,14 +149,16 @@ The terms and conditions of this Agreement may be modified or amended as necessa
 {% block pricing %}{% endblock %}
 {% endif %}
 
-{% if payment.predefined_rates_for_additional_work == true %}
+{% if payment.assessor_rates_for_additional_services == true %}
 ## Rate Schedule
 {% block rate_schedule %}{% endblock %}
 {% endif %}
 
+{% if agreement.producing_deliverables == true %}
 ## Deliverables
 
 {% block deliverables %}{% endblock %}
+{% endif %}
 
 ## Estimated Engagement Schedule
 
@@ -141,15 +178,21 @@ The terms and conditions of this Agreement may be modified or amended as necessa
 
 ## Signatures
 
-By signing this document, {{ parties.recipient.representative.name }} gives {{ parties.service_provider.representative.name }} permission to conduct the above Statement of Work and agrees to adhere to the terms and conditions aforementioned in this document.
+By signing this document, {{ parties.recipient_name }} gives {{ parties.service_provider_name }} permission to conduct the above Statement of Work and agrees to adhere to the terms and conditions aforementioned in this document.
 
-By signing this document, {{ parties.service_provider.representative.name }} agrees to conduct to the above Statement of Work. {{ parties.service_provider.representative.name }} also agrees to adhere to the terms and conditions aforementioned in this document.
+By signing this document, {{ parties.service_provider_name }} agrees to conduct to the above Statement of Work. {{ parties.service_provider_name }} also agrees to adhere to the terms and conditions aforementioned in this document.
 
-{{ parties.recipient.representative.name }}:
-
-_____________________________________
-
-
-{{ parties.service_provider.representative.name }}:
+{% for rep in representatives %}{% if rep.party == "service_provider" %}{% if rep.authorized_representative == true %}
+{{ rep.name }}
 
 ______________________________________
+
+{% endif %}{% endif %}{% endfor %}
+
+
+{% for rep in representatives %}{% if rep.party == "recipient" %}{% if rep.authorized_representative == true %}
+{{ rep.name }}
+
+______________________________________
+
+{% endif %}{% endif %}{% endfor %}

@@ -1,0 +1,321 @@
+{
+  "profile": "tabular-data-package",
+  "name": "safetag_agreement_metadata",
+  "resources": [
+    {
+      "name": "representatives",
+      "path": "entities/representatives.csv",
+      "dialect": {
+        "skipInitialSpace": true,
+        "escapeChar": "\\",
+        "header": true,
+        "delimiter": ",",
+        "quoteChar": "\"",
+        "doubleQuote": true,
+        "lineTerminator": "\r\n"
+      },
+      "schema": {
+        "fields": [
+          {
+            "name": "party",
+            "type": "string",
+            "constraints": {
+              "enum": [
+                "recipient",
+                "service_provider"
+              ]
+            },
+            "description": "Which party does this actor belong to?"
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "description": "What is this actors name?"
+          },
+          {
+            "name": "title",
+            "type": "string",
+            "description": "What is this actors title?"
+          },
+          {
+            "name": "authorized_representative",
+            "type": "boolean",
+            "description": "Is this actor the authorized representative for the agreement?"
+          },
+          {
+            "name": "point_of_contact",
+            "type": "boolean",
+            "description": "Is this actor the parties primary point of contact?"
+          },
+          {
+            "name": "access_confidential_information",
+            "type": "boolean",
+            "description": "Is this actor authorized to access confidental information?"
+          },
+          {
+            "name": "emergency_contact",
+            "type": "boolean",
+            "description": "Is this actor an emergency contact during the Engagement?"
+          },
+          {
+            "name": "form_of_immediate_contact_one",
+            "type": "string",
+            "description": "Which two forms of 24/7 immediate contact does this actor use? (such as cell phone, pager, or home phone)"
+          },
+          {
+            "name": "form_of_immediate_contact_two",
+            "type": "string",
+            "description": "Which two forms of 24/7 immediate contact does this actor use? (such as cell phone, pager, or home phone)"
+          },
+          {
+            "name": "secure_data_transfer",
+            "type": "string",
+            "description": "Which form of secure bulk data transfer is this actor capable of? (such as SFTP or encrypted email)"
+          }
+        ]
+      }
+    },
+    {
+      "name": "activities",
+      "dialect": {
+        "skipInitialSpace": true,
+        "escapeChar": "\\",
+        "header": true,
+        "delimiter": ",",
+        "quoteChar": "\"",
+        "doubleQuote": true,
+        "lineTerminator": "\r\n"
+      },
+      "path": "entities/activities.csv",
+      "description": "These are activities you conduct during the engagement.",
+      "schema": {
+        "fields": [
+          {
+            "name": "name",
+            "type": "string",
+            "description": "The name of the activity."
+          },
+          {
+            "name": "begins",
+            "type": "string",
+            "description": "When this activity begins."
+          },
+          {
+            "name": "duration",
+            "type": "string",
+            "description": "The narrative description of how long the activity will last. i.e. \"the entire length of the assessment\""
+          },
+          {
+            "name": "time",
+            "type": "string",
+            "description": "The ammount of work time it will take the assessor complete the activity. i.e. \"5 days\""
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "description": "A short description of the activity."
+          }
+        ]
+      }
+    },
+    {
+      "name": "deliverables",
+      "path": "entities/deliverables.csv",
+      "description": " ............ ",
+      "dialect": {
+        "skipInitialSpace": true,
+        "escapeChar": "\\",
+        "header": true,
+        "delimiter": ",",
+        "quoteChar": "\"",
+        "doubleQuote": true,
+        "lineTerminator": "\r\n"
+      },
+      "schema": {
+        "fields": [
+          {
+            "name": "name",
+            "type": "string",
+            "description": "The name of the activity."
+          },
+          {
+            "name": "purpose_of_deliverable",
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "specifications",
+            "type": "string",
+            "description": "A complete, clear, and measurable set of specifications for this deliverable. This language should allow the Recipiant to easily determine whether or not the deliverable conforms to the specification. This should include measures for both the quantity and the quality of the deliverable. When it is particularly difficult to define the nature or quality of a deliverable hours of professional time are sometimes specified instead."
+          },
+          {
+            "name": "date_of_delivery",
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "considered_confidential",
+            "type": "string",
+            "description": "Is the deliverable considered confidental? i.e. Can it be shared with others? Such as future security assessors, incident responders, funders, partners.",
+            "constraints": {
+              "enum": [
+                "yes",
+                "no"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "milestones",
+      "path": "entities/milestones.csv",
+      "description": "The Engagements project milestones and payment schedule.",
+      "dialect": {
+        "skipInitialSpace": true,
+        "escapeChar": "\\",
+        "header": true,
+        "delimiter": ",",
+        "quoteChar": "\"",
+        "doubleQuote": true,
+        "lineTerminator": "\r\n"
+      },
+      "schema": {
+        "fields": [
+          {
+            "name": "name",
+            "type": "string",
+            "description": "The name of the activity. i.e \"Reconnaissance\""
+          },
+          {
+            "name": "begins",
+            "type": "string",
+            "description": "When this phase begins. i.e. \"alongside assessment preparation\""
+          },
+          {
+            "name": "completion_date",
+            "type": "date",
+            "description": "The date when the milestone is estimated to be complete."
+          },
+          {
+            "name": "price",
+            "type": "number",
+            "description": "The payment that is due upon delivery of this deliverable. i.e. 5000"
+          }
+        ]
+      }
+    },
+    {
+      "name": "rates",
+      "path": "entities/rates.csv",
+      "description": "The Service Providers Rate Schedule for services provided beyond the scope of the engagement.",
+      "schema": {
+        "fields": [
+          {
+            "name": "name",
+            "type": "string",
+            "description": "The name of the service."
+          },
+          {
+            "name": "work_type",
+            "type": "string",
+            "description": "The type of work. (Used for predefined components of the agreement.",
+            "constraints": {
+              "enum": [
+                "misc",
+                "",
+                "incident_referral",
+                "deliverable_revision",
+                "incident_response"
+              ]
+            }
+          },
+          {
+            "name": "base_num_hours",
+            "type": "number",
+            "description": "Is there a minimum number of hours you will bill for for this type of work? If this number is greater than zero you will automatically bill for that base number of hours no matter what when conducting these activities. If you go above you will bill regularly for additional time."
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "description": "A description of this service"
+          },
+          {
+            "name": "hourly_rate",
+            "type": "number",
+            "description": "The hourly rate that is charged for this service."
+          }
+        ]
+      }
+    },
+    {
+      "name": "data_handling",
+      "path": "entities/data_handling.csv",
+      "dialect": {
+        "skipInitialSpace": true,
+        "escapeChar": "\\",
+        "header": true,
+        "delimiter": ",",
+        "quoteChar": "\"",
+        "doubleQuote": true,
+        "lineTerminator": "\r\n"
+      },
+      "schema": {
+        "fields": [
+          {
+            "name": "security_focus",
+            "type": "string",
+            "constraints": {
+              "enum": [
+                "devices",
+                "data",
+                "communications"
+              ]
+            },
+            "description": "Is this security control related to protecting devices; safely storing or destroying data; or ensureing secure sharing of confidential information?"
+          },
+          {
+            "name": "reponsible_parties",
+            "type": "string",
+            "description": "Who must abide by these security controls? \"both' == service provider and recipiant. \"third_parties\" == service provider and third party actors.",
+            "constraints": {
+              "enum": [
+                "service_provider",
+                "recipient",
+                "both",
+                "third_parties"
+              ]
+            }
+          },
+          {
+            "name": "guideline",
+            "type": "string",
+            "description": "A concise statement that clearly describes the security control to be put in place. This language should allow each party to clearly understand what is required of them and if they are enacting it correctly."
+          }
+        ]
+      }
+    },
+    {
+      "name": "representations_and_warranties",
+      "path": "entities/representations_and_warranties.csv",
+      "dialect": {
+        "skipInitialSpace": true,
+        "escapeChar": "\\",
+        "header": true,
+        "delimiter": ",",
+        "quoteChar": "\"",
+        "doubleQuote": true,
+        "lineTerminator": "\r\n"
+      },
+      "schema": {
+        "fields": [
+          {
+            "name": "statement",
+            "type": "string",
+            "description": "The representation, warranty, and/or covenant that is being made. [Speak to a lawyer to draft and review language for this section.] A representation is a statement of fact that applies to the past or present that if untrue might lead to the contract being voided. (i.e. \"Service Provider is independent, non‐product affiliated, and not in the business of selling security systems hardware.\" or \"The recipiant authorized to give authorization to the Service Provider to perform technical assessment activities on all systems, networks, and devices?\") Warranties are statements or promise(s) that a condition is, and/or will be, true when made and/or for a period of time, often for the term of the agreement. (i.e. \"Servcie Provider is the lawful owner or licensee of any software programs or other materials not provided by Company but used by Service Provider in the performance of the Services called for in this Agreement.\") Covenants are promises of future action or inaction.  It’s a contractual statement that a party will do, or will not do, something during a period of time, often the term of the agreement. (i.e. Service Provider warrants that it shall not knowingly, or with negligence, include or authorize any Trojan Horse, back door, time bomb, drop dead device, worm, virus, or other malicious code of any kind that may disable, erase, display any unauthorized message or otherwise impair the Recipaints’s software, with disregard of the possibility of or the intent to cause harm."
+          }
+        ]
+      }
+    }
+  ]
+}

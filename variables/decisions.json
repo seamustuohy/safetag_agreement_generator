@@ -1,0 +1,768 @@
+{
+  "payment": [
+    {
+      "question": "Who is funding the assessment?",
+      "answers": {
+        "The recipient": "recipient",
+        "A third party": "third party",
+        "The assessor": "assessor"
+      },
+      "sets": "funded"
+    },
+    {
+      "question": "How many days does the recipiant have to pay the assessor after getting an invoice?",
+      "sets": "payment_due_days",
+      "depends": {
+        "funded": "recipient"
+      }
+    },
+    {
+      "question": "Will the recipiant be charged a fee if they are late with payment?",
+      "answers": {
+        "Yes": true,
+        "No": false
+      },
+      "sets": "late_fee_charged",
+      "depends": {
+        "funded": "recipient"
+      }
+    },
+    {
+      "question": "What percentage of the total invoice will be charged every interval?",
+      "help": "Entering 10 will equal 10%. The interval that it will be charged at is the next question.",
+      "sets": "late_fee_percentage",
+      "depends": {
+        "late_fee_charged": true
+      }
+    },
+    {
+      "question": "At what interval will the recipiant be charged for late payment?",
+      "help": "If you put 10% in the last section by putting days here would charge the recipiant 10% per day.",
+      "sets": "late_fee_timeline",
+      "depends": {
+        "late_fee_charged": true
+      }
+    },
+    {
+      "question": "Are you willing to provide additional services or document revisions beyond the scope of this contract?",
+      "answers": {
+        "Yes": true,
+        "No": false
+      },
+      "sets": "assessor_provides_additional_service"
+    },
+    {
+      "question": "Will the recipiant be charged for those additional services and/or document revisions?",
+      "answers": {
+        "Yes": true,
+        "No": false
+      },
+      "sets": "recipiant_must_pay_for_additional_service",
+      "depends": {"assessor_provides_additional_service":true}
+    },
+    {
+      "question": "What is the rate that you charge for each type of additional service?",
+      "help": "You need to set these in the rates.csv file.",
+      "take_input": false,
+      "from_package": {
+        "name": "rates"
+      },
+      "depends": {
+        "recipiant_must_pay_for_additional_service": true
+      },
+      "sets": "assessor_rates_for_additional_services"
+    }
+  ],
+  "agreement": [
+    {
+      "question": "What is the goal for this Engagement?",
+      "help": "Before writing your agreement, decide what your goals are for the Engagement. Every assessment should be goal-oriented. A good legal contract is one that captures the intentions of the parties accurately.",
+      "sets": "goal"
+    },
+    {
+      "question": "Will you be producing any deliverables as a part of this Engagement?",
+      "help": "Deliverables are measureable, tangible, verifiable outcomes, results, or items that must be produced to complete a project.",
+      "sets": "producing_deliverables",
+      "answers": {
+        "Yes": true,
+        "No": false
+      }
+    },
+    {
+      "question": "What deliverables will you be producing?",
+      "help": "You need to set these in the deliverables.csv file.",
+      "take_input": false,
+      "from_package": {
+        "name": "deliverables"
+      },
+      "depends": {
+        "producing_deliverables": true
+      },
+      "sets": "deliverables_to_be_produced"
+    },
+    {
+      "question": "Are there third parties that are expected to complete part of this work?",
+      "help": "Will you be using subcontractors, third party services, etc.?",
+      "sets": "utilizing_third_parties",
+      "answers": {
+        "Yes": true,
+        "No": false
+      }
+    },
+    {
+      "question": "Does the Recipiant have the right to approve/dissaprove of these parties?",
+      "help": "If chosen you will have to inform the Recipiant and get their written approval. ",
+      "sets": "recipiant_written_approval_of_third_parties",
+      "answers": {
+        "Yes": true,
+        "No": false
+      },
+      "depends": {
+        "utilizing_third_parties": true
+      }
+    },
+    {
+      "question": "Who is each parties \"authorized representative\" who will sign this agreement?",
+      "help": "You need to set these in the representatives.csv file with the \"authorized_representative\" tag set to true",
+      "sets": "authorized_representatives",
+      "take_input": false,
+      "from_package": {
+        "name": "representatives"
+      }
+    }
+  ],
+  "term_of_contract": [
+    {
+      "question": "What is the start date of the Agreement?",
+      "help": "The start date of the Agreement is not necessarily the start date of the Assessment.",
+      "sets": "agreement_start_date"
+    },
+    {
+      "question": "What event(s) will signal that the agreement is completed?",
+      "help": "",
+      "sets": "event_that_completes_agreement",
+      "answers": {
+        "A certain date": "date",
+        "The scope of work and deliverables are complete": "sow",
+        "Both the date and the completion of deliverables and scope of work": "both"
+      }
+    },
+    {
+      "question": "What is the end date of the Agreement",
+      "help": "",
+      "sets": "agreement_end_date",
+      "depends": {
+        "type": "or",
+        "event_that_completes_agreement": "both"
+      }
+    }
+  ],
+  "engagement": [
+    {
+      "question": "What activities will occur during this Engagement?",
+      "help": "You need to set these in the activities.csv file.",
+      "take_input": false,
+      "from_package": {
+        "name": "activities"
+      },
+      "sets":"activities_of_engagement"
+    },
+    {
+      "question": "What milestones will you be using to track the engagements progress?",
+      "help": "You need to set these in the milestones.csv file.",
+      "take_input": false,
+      "from_package": {
+        "name": "milestones"
+      },
+      "sets":"milestones_of_engagement"
+    }
+  ],
+  "parties": [
+    {
+      "question": "What is the Service Providers name?",
+      "help": "This is the official name that the agreement will use for the organization and/or individual conduction the assessment.",
+      "sets": "service_provider_name"
+    },
+    {
+      "question": "What is the official name of the Recipient?",
+      "help": "This is the official name that the agreement will use for organization and/or individual being assessed.",
+      "sets": "recipient_name"
+    },
+    {
+      "question": "What type of entity is the Service Provider",
+      "help": "Are they a Non-Profit, LLC, Corporation, etc.",
+      "sets": "service_provider_entity_type"
+    },
+    {
+      "question": "What is the Service Providers address",
+      "help": "i.e. 555 Noth Westerson st. Washinton, DC, 20033",
+      "sets": "service_provider_address"
+    },
+    {
+      "question": "What is the Recipients address",
+      "help": "i.e. 555 Noth Westerson st. Washinton, DC, 20033",
+      "sets": "recipient_address"
+    },    {
+      "question": "What type of entity is the Recipient",
+      "help": "Are they a Non-Profit, LLC, Corporation, etc.",
+      "sets": "recipient_entity_type"
+    },
+    {
+      "question": "Who is each parties primary \"point of contact\"?",
+      "help": "You need to set these in the representatives.csv file with the \"point_of_contact\" tag set to true",
+      "sets": "points_of_contact",
+      "take_input": false,
+      "from_package": {
+        "name": "representatives"
+      }
+    }
+  ],
+  "risk_allocation": [
+    {
+      "question": "Are delays or failures in performance that are caused by a \"security incident?\" allowed?",
+      "help": "Should each party be protected from \"breaches of contract\" that occur because of security incidents?",
+      "sets": "security_incident_force_majeure",
+      "answers": {
+        "Yes": true,
+        "No": false
+      }
+    }
+  ],
+  "scope_of_work": [
+    {
+      "question": "Will the assessment include an on-site activities?",
+      "help": "Will you be going to any physical locations to conduct assessment activities?",
+      "sets": "on_site_assessment_activities",
+      "answers": {
+        "Yes": true,
+        "No": false
+      }
+    },
+    {
+      "question": "Will the assessment include active technical measures?",
+      "help": "Examples include network discovery, network port and service identification, vulnerability scanning, wireless, scanning, or penetration testing)",
+      "sets": "active_technical_measures",
+      "answers": {
+        "Yes": true,
+        "No": false
+      }
+    },
+    {
+      "question": "Are there Activities that this assessment explicitly does not include?",
+      "help": "Use this section to clear up any misconceptions that the Recipiant might have about what is included in the assessment. One example is \"Fixing vulnerabilities that are found\"",
+      "sets": "activities_not_included"
+    },
+    {
+      "question": "Will you providing progress updates to the Recipiant throughout the Assessment?",
+      "help": "This could be meetings, emails, etc.",
+      "sets": "progress_updates_included",
+      "answers": {
+        "Yes": true,
+        "No": false
+      }
+    },
+    {
+      "question": "How will you be providing status updates?",
+      "help": "This could be meetings, emails, etc.",
+      "sets": "status_updates_format",
+      "answers": {
+        "In Person": "in_person",
+        "Written form": "written"
+      },
+      "depends": {
+        "progress_updates_included": true
+      }
+    },
+    {
+      "question": "When will these status updates start?",
+      "help": "Status updates will start {{THIS}} and will end {{status_updates_end}}.",
+      "sets": "status_updates_start",
+      "depends": {
+        "progress_updates_included": true
+      }
+    },
+    {
+      "question": "When will these status updates end?",
+      "help": "Status updates will start {{status_updates_start}} and will end {{THIS}}.",
+      "sets": "status_updates_end",
+      "depends": {
+        "progress_updates_included": true
+      }
+    },
+    {
+      "question": "How frequently will these updates happen?",
+      "help": "A sentence describing the frequency of updates",
+      "sets": "status_updates_frequency",
+      "depends": {
+        "progress_updates_included": true
+      }
+    },
+    {
+      "question": "Who is required to attend the status update meetings?",
+      "help": "Use your Representatives list as a guide.",
+      "sets": "status_update_meeting_attendees",
+      "depends": {
+        "status_updates_format": "in_person"
+      }
+    },
+    {
+      "question": "Who will the written updates be sent to?",
+      "help": "Use your Representatives list as a guide.",
+      "sets": "written_updates_recipients",
+      "depends": {
+        "status_updates_format": "written"
+      }
+    }
+  ],
+  "termination_without_cause": [
+    {
+      "question": "How many days of notice must either party give to terminate this agreement?",
+      "help": "This is for terminating the agreement \"without\" cause.",
+      "sets": "days_in_notice_period"
+    },
+    {
+      "question": "Is there a cancellation fee if the Recipient wishes to terminate this agreement without cause to do so?",
+      "help": "This is beyond paying for any work already performed.",
+      "sets": "cancellation_fee",
+      "answers": {
+        "Yes": true,
+        "No": false
+      }
+    },
+    {
+      "question": "What is the a cancellation fee if the Recipient wishes to terminate this agreement without cause.",
+      "help": "",
+      "sets": "cancellation_fee_amount",
+      "depends": {"cancellation_fee": true}
+    }
+  ],
+  "termination_with_cause": [
+    {
+      "question": "If either party breaches the agreement how many days should they have to remedy the breach before the other party can terminate the contract \"with cause.\"",
+      "help": "This is also the time frame for the Service Provider to fix deliverables that do not meet the stated specifications and for either party to respond to a proposed change to the scope of work.",
+      "sets": "days_to_remedy_breach"
+    },
+    {
+      "question": "How many business days from the delivery of any deliverable does the Recipiant have to raise an objection before the deliverable is deemed as accepted?",
+      "help": "",
+      "sets": "days_until_auto_acceptance"
+    },
+    {
+      "question": "Does each party have to give advanced notice to the other if a deadline is going to be missed?",
+      "help": "",
+      "sets": "notice_of_delays",
+      "answers": {
+        "Yes": true,
+        "No": false
+      }
+    },
+    {
+      "question": "What are the max number of days of extension that are allowed?",
+      "help": "",
+      "sets": "max_num_of_extension_delays",
+      "answers": {
+        "Yes": true,
+        "No": false
+      }
+    },
+    {
+      "question": "How should notification be done?",
+      "help": "This could include e-mail, registered post, etc. This value used for all Agreement based notifications such as changes to the scope of work or Agreement termination. Example usage: \"All written notifications should be delivered using [THIS].\"",
+      "sets": "notification_format"
+    },
+    {
+      "question": "How many days before a deadline is missed must notification occur?",
+      "sets": "notification_days_before_deadline",
+      "depends": {
+        "notice_of_delays": true
+      }
+    }
+  ],
+  "scope_changes": [
+    {
+      "question": "How many days notice must each party give if they wish to change the scope of work?",
+      "sets": "sow_modification_notification_days"
+    },
+    {
+      "question": "Are there any number of Recipient requested revisions to deliverables built into the Scope of Work?",
+      "help": "Can the Revipient request that you revise your deliverables some number of times even if they are acceptable according to this agreement?",
+      "sets": "unpaid_recipiant_requested_revisions",
+      "answers": {
+        "Yes": true,
+        "No": false
+      },
+      "depends": {
+      }
+    },
+    {
+      "question": "How many rounds of revisions can the Recipient request for each deliverable?",
+      "help": "",
+      "sets": "number_of_free_revisions_allowed",
+      "depends": {
+        "unpaid_recipiant_requested_revisions": true
+      }
+    },
+    {
+      "question": "Are you willing to provide additional rounds of revisions for pay?",
+      "help": "",
+      "sets": "paid_recipiant_requested_revisions",
+      "answers": {
+        "Yes": true,
+        "No": false
+      }
+    },
+    {
+      "question": "What is your hourly rate(s) and minimum number of hours you will bill for when writing revisions?",
+      "help": "You need to set these in the rates.csv file using \"deliverable_revision\" in the \"work_type\" column",
+      "from_package": {
+        "name": "rates",
+        "conditions": {
+          "work_type": "deliverable_revision"
+        }
+      },
+      "depends":{"paid_recipiant_requested_revisions":true},
+      "sets": "paid_deliverable_revision_info",
+      "take_input": false
+    }
+  ],
+  "disputes": [
+    {
+      "question": "Should the Parties try professional mediation for disputes that arise before they escalating it to Arbitration and/or the courts?",
+      "help": "This will add a clause that requires the parties to attempt to mediate using a professional mediator before resolving the dispute in a more formal way.",
+      "sets": "mediation_occurs_before_other_adr_or_legislation",
+      "answers": {
+        "Yes": true,
+        "No": false
+      }
+    },
+    {
+      "question": "Should the parties use Binding Arbitration instead of escalating to the courts?",
+      "help": "Binding arbitration is often less expensive than using the court system.",
+      "sets": "use_binding_arbitration",
+      "answers": {
+        "Yes": true,
+        "No": false
+      }
+    },
+    {
+      "question": "Who is the dispute resolution provider you will use for mediation and/or arbitration?",
+      "help": "This is the organization who will provide the mediation and/or arbitrator you will use.",
+      "sets": "alternative_dispute_resolution_provider",
+      "depends": {
+        "type": "or",
+        "use_binding_arbitration": true,
+        "mediation_occurs_before_other_adr_or_legislation": true
+      }
+    },
+    {
+      "question": "How many days do the parties have to wait after requesting mediation before they can demand arbitration and/or litigation?",
+      "help": "If a party feels that they want to move on to arbitration how much time are they required to take part in the mediation process for?",
+      "sets": "delay_after_mediation_before_requesting_other_means",
+      "answers": {
+        "Yes": true,
+        "No": false
+      },
+      "depends": {
+        "type": "and",
+        "use_binding_arbitration": true,
+        "mediation_occurs_before_other_adr_or_legislation": true
+      }
+    },
+    {
+      "question": "What location should any litigation about this agreement take place in?",
+      "help": "For example \"[a]ny proceeding of any nature arising out of this Agreement shall be instituted only in the courts by the State of New Jersey.\"",
+      "sets": "location_for_litigation"
+    },
+    {
+      "question": "What country/state's laws should govern this contract?",
+      "help": "For example \"This contract shall be governed by and interpreted in accordance with the laws of [a designated State], excluding such State’s conflict of law principles\"",
+      "sets": "choice_of_law"
+    },
+    {
+      "question": "Should the losing party have to pay the winning parties attorneys fees?",
+      "help": "If this is in here one of the parties cannot just out-spend the other in attorneys fees to win.",
+      "sets": "losing_party_pays_winner",
+      "answers": {
+        "Yes": true,
+        "No": false
+      }
+    }
+  ],
+  "secure_data_handling": [
+    {
+      "question": "What guidelines will be followed for securing devices used during the assessment?",
+      "help": "You need to set these in the data_handling.csv file using \"devices\" in the \"security focus\" column and \"service_provider\", \"recipiant\", or \"both\" in the \"responsible_parties\" column depending upon the responsible party",
+      "from_package": {
+        "name": "data_handling",
+        "conditions": {
+          "security_focus": "devices"
+        }
+      },
+      "sets": "device_security_guidelines",
+      "take_input": false
+    },
+    {
+      "question": "What guidelines will be followed for gathering, storing, and destroying confidential information and test data?",
+      "help": "You need to set these in the data_handling.csv file using \"data\" in the \"security focus\" column and \"service_provider\", \"recipiant\", or \"both\" in the \"responsible_parties\" column depending upon the responsible party",
+      "from_package": {
+        "name": "data_handling",
+        "conditions": {
+          "security_focus": "data"
+        }
+      },
+      "take_input": false,
+      "sets": "data_security_guidelines"
+    },
+    {
+      "question": "How long will you retain sensitive data after the Engagement before destroying it?",
+      "help": "Service Provider will destroy all confidential material [THIS ANSWER] after the Engagement.",
+      "sets": "data_retention_period"
+    }
+  ],
+  "communications": [
+    {
+      "question": "What guidelines will be followed for for sharing confidential information during the Engagement?",
+      "help": "You need to set these in the data_handling.csv file using \"communications\" in the \"security focus\" column and \"service_provider\", \"recipiant\", or \"both\" in the \"responsible_parties\" column depending upon the responsible party",
+      "from_package": {
+        "name": "data_handling",
+        "conditions": {
+          "security_focus": "communications"
+        }
+      },
+      "take_input": false,
+      "sets": "communication_security_guidelines"
+    }
+  ],
+  "incident_response_and_handling": [
+    {
+      "question": "Who are each parties \"emergency contacts\" in the case of an incident?",
+      "help": "You need to set these in the representatives.csv file with the \"emergency_contact\" tag set to true",
+      "sets": "emergency_contact",
+      "take_input": false,
+      "from_package": {
+        "name": "representatives"
+      }
+    },
+    {
+      "question": "How much time does each party have to inform the other if there is a security incident?",
+      "help": "",
+      "sets": "disclosure_period"
+    },
+    {
+      "question": "Is the service provider obligated to support the Recipiant addressing incidents that are identified as a part of this Scope of Work?",
+      "sets": "sp_must_support_incident_response",
+      "answers": {
+        "Yes": true,
+        "No": false
+      }
+    },
+    {
+      "question": "Are you willing to support the Recipiant in addressing incidents for pay?",
+      "help": "",
+      "sets": "paid_incident_response_support_provided",
+      "answers": {
+        "Yes": true,
+        "No": false
+      },
+      "depends": {
+        "recipiant_must_support_incident_response": false
+      }
+    },
+    {
+      "question": "What is your hourly rate(s)(s) and minimum number of hours you will bill for supporting the Recipiant in responding to incidents?",
+      "help": "You need to set these in the rates.csv file using \"incident_response\" in the \"work_type\" column",
+      "from_package": {
+        "name": "rates",
+        "conditions": {
+          "work_type": "incident_response"
+        }
+      },
+      "sets": "paid_incident_response_info",
+      "take_input": false,
+      "depends": {
+        "paid_incident_response_support_provided": true
+      }
+    },
+    {
+      "question": "Is the service provider obligated to support the Recipiant in referring incidents to third parties who can help address the incident as a part of this Scope of Work?",
+      "sets": "sp_must_support_incident_referrals",
+      "answers": {
+        "Yes": true,
+        "No": false
+      },
+      "depends": {
+        "recipiant_must_support_incident_response": false
+      }
+    },
+    {
+      "question": "Are you willing to support the Recipiant in referring incidents to third parties for pay?",
+      "help": "",
+      "sets": "paid_sp_supported_incident_referrals",
+      "answers": {
+        "Yes": true,
+        "No": false
+      },
+      "depends": {
+        "recipiant_must_support_incident_referrals": false
+      }
+    },
+    {
+      "question": "What is your hourly rate(s) and minimum number of hours you will bill for supporting the Recipiant in referring incidents to third parties?",
+      "help": "You need to set these in the rates.csv file using \"incident_referral\" in the \"work_type\" column",
+      "from_package": {
+        "name": "rates",
+        "conditions": {
+          "work_type": "incident_referral"
+        }
+      },
+      "sets": "paid_incident_referral_info",
+      "take_input": false,
+      "depends": {
+        "paid_recipiant_supported_incident_referrals": true
+      }
+    },
+    {
+      "question": "How should the arrangement & activities of third party incident response be isolated from, or integrated with, the existing Engagement?",
+      "help": "This is a free text section for you to describe the level of interaction that you would like between yourself and any individuals who are brought in to respond to an incident.",
+      "sets": "engagement_with_incident_responder",
+      "depends": {
+        "recipiant_must_support_incident_response": false
+      }
+    },
+    {
+      "question": "Should the Recipiant be allowed to block the Service Provider from informing third parties of the Recipients information security incidents.",
+      "help": "Should the Recipiant be able to prevent the Service Provider from giving notice of an Information Security Incident to any individuals, regulators, law enforcement agencies, consumer reporting agencies or others as may be required by law or regulation.",
+      "sets": "recipiant_controls_incident_disclosure_to_third_parties",
+      "answers": {
+        "Yes": true,
+        "No": false
+      }
+    }
+  ],
+  "confidentiality": [
+    {
+      "question": "For how many years after the Engagement will each party protect the others confidential information?",
+      "help": "",
+      "sets": "confidential_information_sunset_years"
+    },
+    {
+      "question": "How many days does a party have to inform the other that a piece of information they were given is confidential?",
+      "help": "This timeline is used to ensure that parties let each other what information they need to protect in a reasonable time frame.",
+      "sets": "timeline_for_confidential_info_notice"
+    },
+    {
+      "question": "Which representatives from each party are authorized to access confidental information?",
+      "help": "You need to set these in the representatives.csv file with the \"access_confidental_information\" tag set to true. These parties must include all emergency contacts.",
+      "sets": "reps_with_access_to_confidental_info",
+      "take_input": false,
+      "from_package": {
+        "name": "representatives"
+      }
+    },
+    {
+      "question": "Does any confidential information have to be reported/shared with a specific third party?",
+      "help": "For example, this could be confidential information that has to be shared with a third party funder in monitoring and evaluation reports, or with the members of a coalition who have assessments done of new members.",
+      "sets": "confidential_info_shared_with_third_parties",
+      "answers": {
+        "Yes": true,
+        "No": false
+      }
+    },
+    {
+      "question": "Who is this third party?",
+      "help": "Service Provider is able to provide [information_to_be_shared_with_third_parties] to [THIS QUESTION].",
+      "sets": "third_parties_with_access_to_confidential_information",
+      "depends": {"confidential_info_shared_with_third_parties": true}
+    },
+    {
+      "question": "Which specific pieces of information will be shared with this third party.",
+      "help": "Service Provider is able to provide [THIS QUESTION] to [third party].",
+      "sets": "information_to_be_shared_with_third_parties",
+      "depends": {"confidential_info_shared_with_third_parties": true}
+    },
+    {
+      "question": "What guidelines will be followed when sharing this confidential information with the identified third parties?",
+      "help": "You need to set these in the data_handling.csv file using \"third_parties\" in the \"responsible_parties\" column.",
+      "take_input": false,
+      "from_package": {
+        "name": "data_handling",
+        "conditions": {
+          "security_focus": "communications"
+        }
+      },
+      "take_input": false,
+      "sets": "communication_security_guidelines",
+      "depends": {
+        "confidential_info_shared_with_third_parties": true
+      }
+    },
+    {
+      "question": "Can the Recipiant share the contents of this agreement with others?",
+      "help": "For example, can they share this with other service providers to get competing bids? Can they show it to their funder to evaluate if it is appropriate?.",
+      "sets": "agreement_is_considered_confidential",
+      "answers": {
+        "Yes": true,
+        "No": false
+      }
+    }
+  ],
+  "assignment": [
+    {
+      "question": "Who will own the different parts of your work product.",
+      "help": "[Speak to a lawyer to draft and review language for this section.] This is a free text section for you to describe who will own the deliverable you create, any intellectual property you own that was used to carry out the Engagement, and any Work Product created to support the activities that were not included in the deliverables. It should also include at what point any assignment of ownership occurs. i.e After payment, upon signing, etc. Finally, it should include any limitations on these assignments. i.e. You can't give ownership of third-party tools that you used. [Speak to a lawyer to draft and review language for this section.]",
+      "sets": "ownership_of_work_product"
+    }
+  ],
+  "survival": [
+    {
+      "question": "Which sections of this agreement will remain in effect after the termination or expiration of this agreement?",
+      "help": "[Speak to a lawyer to draft and review language for this section.] This is a free text section for you to describe which sections of this agreement will remain in effect after the termination or expiration of the agreement. An example section might look something like this. The provisions of the Sections \"Disputes\", \"Attorney Fees\", \"Ownership of Work Product\", and \"Limited Liability\" within this Agreement and the Sections \"Confidential Information\" and \"Information Security Safeguards\" within the Rules of Engagement will survive any termination of this Agreement.",
+      "sets": "survival_clause"
+    }
+  ],
+  "representations_and_warranties": [
+    {
+      "question": "Are there any additional commitments, warranties, and/or representations by either party that needs to be made explicit in the agreement?.",
+      "help": "[Speak to a lawyer to draft and review language for this section.] A representation is a statement of fact that applies to the past or present that if untrue might lead to the contract being voided. (i.e. \"Service Provider is independent, non‐product affiliated, and not in the business of selling security systems hardware.\" or \"The recipiant authorized to give authorization to the Service Provider to perform technical assessment activities on all systems, networks, and devices?\") Warranties are statements or promise(s) that a condition is, and/or will be, true when made and/or for a period of time, often for the term of the agreement. ",
+      "from_package": {
+        "name": "representations_and_warranties"
+      },
+      "sets": "resentations_and_warranties",
+      "take_input": false
+    }
+  ],
+  "limitations_on_liability": [
+    {
+      "question": "This is a free text section for you to describe your Liability to the Recipient and the Recipients liability to you.",
+      "help": "[Speak to a lawyer to draft and review language for this section.]",
+      "sets": "limitations_on_liability"
+    }
+  ],
+  "indemnities": [
+    {
+      "question": "This is a free text section for you to describe how parties \"indemnify each other from 3rd party action related to the assessment.",
+      "help": "[Speak to a lawyer to draft and review language for this section.] An example of an assessment related indemnity would be a clause stating that the Service Provider is indemnified from any third party legal action  that was caused by actions you took based off of inaccurate information provided by the Recipient. (i.e. if you scan an IP address the Recipient told you they own, but that turns out to be owned by a third party.) You would want them to indemnify you for that action so they take on the liability with the third party actor who sues you. Another example might be that the Recipient wants to be indemnified from future data-breach lawsuits from their clients if they suffer a breach on a system you found no flaws in.",
+      "sets": "indemnities"
+    }
+  ],
+  "expenses": [
+    {
+      "question": "Who is responsible for covering your assessment expenses?",
+      "answers": {
+        "The recipient": "recipient",
+        "A third party": "third party",
+        "The assessor": "assessor"
+      },
+      "sets": "who_pays_for_expenses"
+    },
+    {
+      "question": "Do you have to get pre-approval for expenses?",
+      "answers": {
+      },
+      "sets": "basic_payment_conditions",
+      "depends": {
+        "who_pays_for_expenses":"recipient"
+      }
+    }
+  ]
+}
