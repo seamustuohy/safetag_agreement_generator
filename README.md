@@ -47,6 +47,7 @@ The SAFETAG agreement generator includes an interactive agreement decision makin
 python3 make_agreement.py
 ```
 
+![screenshot of interface](https://github.com/seamustuohy/safetag_agreement_generator/blob/decision_tree/images/screenshot.png?raw=true)
 
 Once the Assessor has finished entering data in the GUI a new "custom variable" file will be create in the "variables" folder. It will be named `custom_[DATE]_[TIME].json` (for example: `custom_2017_Sep_10_13_17.json`.) You can learn more about the structure of this variable file in the **Variable Files** section below.
 
