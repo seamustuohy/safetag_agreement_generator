@@ -372,8 +372,8 @@ class Application(tk.Frame):
                                         value=val,
                                         command=lambda : self.action_select(
                                             radioVar.get()))
-                _radio.grid(column=i,
-                            row=0,
+                _radio.grid(column=0,
+                            row=i,
                             padx=2,
                             pady=2)
                 _radio.deselect()
