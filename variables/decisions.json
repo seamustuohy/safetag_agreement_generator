@@ -180,22 +180,22 @@
   "parties": [
     {
       "question": "What is the Service Providers name?",
-      "help": "This is the official name that the agreement will use for the organization and/or individual conduction the assessment.",
+      "help": "This is the official name that the agreement will use for the organization and/or individual conduction the assessment.\nFor example, \"This contract agreement is entered into as of July 12th 2016 by and between [THIS QUESTION], a Washinton, DC Corporation located at 1600 Pennsylvania Ave NW, Washington, DC 20500 and XYC Company, a  a Colorado 501(c)(3) nonprofit corporation located at 1600 Pennsylvania Ave NW, Washington, DC 20500.\"",
       "sets": "service_provider_name"
     },
     {
       "question": "What is the official name of the Recipient?",
-      "help": "This is the official name that the agreement will use for organization and/or individual being assessed.",
+      "help": "This is the official name that the agreement will use for organization and/or individual being assessed.\nFor example, \"This contract agreement is entered into as of July 12th 2016 by and between ABC Assessing, a Washinton, DC Corporation located at 1600 Pennsylvania Ave NW, Washington, DC 20500 and [THIS QUESTION], a  a Colorado 501(c)(3) nonprofit corporation located at 1600 Pennsylvania Ave NW, Washington, DC 20500.\"",
       "sets": "recipient_name"
     },
     {
       "question": "What type of entity is the Service Provider",
-      "help": "Are they a Non-Profit, LLC, Corporation, etc.",
+      "help": "Are they a Non-Profit, LLC, Corporation, etc.\nFor example, \"This contract agreement is entered into as of July 12th 2016 by and between ABC Assessing, a [THIS QUESTION] located at 1600 Pennsylvania Ave NW, Washington, DC 20500 and XYC Company, a Colorado 501(c)(3) nonprofit corporation located at 1600 Pennsylvania Ave NW, Washington, DC 20500.\"",
       "sets": "service_provider_entity_type"
     },
     {
       "question": "What is the Service Providers address",
-      "help": "i.e. 555 Noth Westerson st. Washinton, DC, 20033",
+      "help": "i.e. 555 Noth Westerson st. Washinton, DC, 20033\nFor example, \"This contract agreement is entered into as of July 12th 2016 by and between ABC Assessing, a Washinton, DC Corporation located at [THIS QUESTION] and XYC Company, a Colorado 501(c)(3) nonprofit corporation located at 1600 Pennsylvania Ave NW, Washington, DC 20500.\"",
       "sets": "service_provider_address"
     },
     {
@@ -204,7 +204,7 @@
       "sets": "recipient_address"
     },    {
       "question": "What type of entity is the Recipient",
-      "help": "Are they a Non-Profit, LLC, Corporation, etc.",
+      "help": "Are they a Non-Profit, LLC, Corporation, etc.\nFor example, \"This contract agreement is entered into as of July 12th 2016 by and between ABC Assessing, a Washinton, DC Corporation located at 1600 Pennsylvania Ave NW, Washington, DC 20500 and XYC Company, a Colorado 501(c)(3) nonprofit corporation  located at [THIS QUESTION].\"",
       "sets": "recipient_entity_type"
     },
     {
@@ -561,7 +561,7 @@
         "No": false
       },
       "depends": {
-        "recipiant_must_support_incident_response": false
+        "sp_must_support_incident_response": false
       }
     },
     {
@@ -587,7 +587,7 @@
         "No": false
       },
       "depends": {
-        "recipiant_must_support_incident_response": false
+        "sp_must_support_incident_response": false
       }
     },
     {
@@ -599,7 +599,7 @@
         "No": false
       },
       "depends": {
-        "recipiant_must_support_incident_referrals": false
+        "sp_must_support_incident_referrals": false
       }
     },
     {
@@ -614,7 +614,7 @@
       "sets": "paid_incident_referral_info",
       "take_input": false,
       "depends": {
-        "paid_recipiant_supported_incident_referrals": true
+        "paid_sp_supported_incident_referrals": true
       }
     },
     {
@@ -622,7 +622,7 @@
       "help": "This is a free text section for you to describe the level of interaction that you would like between yourself and any individuals who are brought in to respond to an incident.",
       "sets": "engagement_with_incident_responder",
       "depends": {
-        "recipiant_must_support_incident_response": false
+        "sp_must_support_incident_response": false
       }
     },
     {

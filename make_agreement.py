@@ -283,7 +283,7 @@ class Application(tk.Frame):
         if depends != {}: # Dependency exists!
             # Check for dependency found earlier in this section
             # Todo, allow dependencies to be found across sections
-            print(self.decisions_made[self.current_section])
+            self.log.debug(self.decisions_made[self.current_section])
             found = evaluate_depends(depends,
                                      self.decisions_made[self.current_section])
         if found is None:
@@ -295,7 +295,7 @@ class Application(tk.Frame):
         elif found is False:
             # Dependency was asked and answer does not match
             # We don't need to ask this question
-            print("Dependency for {0} not met".format(question_text))
+            self.log.debug("Dependency for {0} not met".format(question_text))
             self.decisions_made[self.current_section][self.current_question] = ""
             self.next_decision()
         else:
