@@ -723,7 +723,7 @@
   "representations_and_warranties": [
     {
       "question": "Are there any additional commitments, warranties, and/or representations by either party that needs to be made explicit in the agreement?.",
-      "help": "[Speak to a lawyer to draft and review language for this section.] A representation is a statement of fact that applies to the past or present that if untrue might lead to the contract being voided. (i.e. \"Service Provider is independent, non‐product affiliated, and not in the business of selling security systems hardware.\" or \"The recipiant authorized to give authorization to the Service Provider to perform technical assessment activities on all systems, networks, and devices?\") Warranties are statements or promise(s) that a condition is, and/or will be, true when made and/or for a period of time, often for the term of the agreement. ",
+      "help": "You need to set these in the representations_and_warranties.csv file. \n[Speak to a lawyer to draft and review language for this section.] A representation is a statement of fact that applies to the past or present that if untrue might lead to the contract being voided. (i.e. \"Service Provider is independent, non‐product affiliated, and not in the business of selling security systems hardware.\" or \"The recipiant authorized to give authorization to the Service Provider to perform technical assessment activities on all systems, networks, and devices?\") Warranties are statements or promise(s) that a condition is, and/or will be, true when made and/or for a period of time, often for the term of the agreement. ",
       "from_package": {
         "name": "representations_and_warranties"
       },
