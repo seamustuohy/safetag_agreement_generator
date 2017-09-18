@@ -359,11 +359,7 @@
     {
       "question": "What are the max number of days of extension that are allowed?",
       "help": "",
-      "sets": "max_num_of_extension_delays",
-      "answers": {
-        "Yes": true,
-        "No": false
-      }
+      "sets": "max_num_of_extension_delays"
     },
     {
       "question": "How should notification be done?",
@@ -758,6 +754,8 @@
     {
       "question": "Do you have to get pre-approval for expenses?",
       "answers": {
+        "Yes": true,
+        "No": false
       },
       "sets": "basic_payment_conditions",
       "depends": {
