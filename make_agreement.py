@@ -434,7 +434,7 @@ def parse_arguments():
                         help="Turn debugging on",
                         action='store_true')
     parser.add_argument("--parse", "-p",
-                        help="Path to an existing custom agreement document to parse into an agreement.",
+                        help="Path to an existing custom agreement document to parse into an agreement. This will re-read the custom agreement values from this file as well as from the entity files. As such, this will execute the template without the decision tree questions. This enables you to tweak your agreement json file and/or your entity csv files to re-generate your agreements quickly.",
                         type=argparse.FileType('r'),
                         default=None)
     parser.add_argument("--agreement_type", "-a",
