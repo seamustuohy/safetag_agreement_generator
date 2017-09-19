@@ -731,14 +731,14 @@
     {
       "question": "This is a free text section for you to describe your Liability to the Recipient and the Recipients liability to you.",
       "help": "[Speak to a lawyer to draft and review language for this section.]",
-      "sets": "limitations_on_liability"
+      "sets": "limitations_on_liability_text"
     }
   ],
   "indemnities": [
     {
       "question": "This is a free text section for you to describe how parties \"indemnify each other from 3rd party action related to the assessment.",
       "help": "[Speak to a lawyer to draft and review language for this section.] An example of an assessment related indemnity would be a clause stating that the Service Provider is indemnified from any third party legal action  that was caused by actions you took based off of inaccurate information provided by the Recipient. (i.e. if you scan an IP address the Recipient told you they own, but that turns out to be owned by a third party.) You would want them to indemnify you for that action so they take on the liability with the third party actor who sues you. Another example might be that the Recipient wants to be indemnified from future data-breach lawsuits from their clients if they suffer a breach on a system you found no flaws in.",
-      "sets": "indemnities"
+      "sets": "indemnities_text"
     }
   ],
   "expenses": [
