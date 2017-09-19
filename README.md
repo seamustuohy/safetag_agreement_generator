@@ -81,6 +81,25 @@ If you have changed a plain variable file or template you can re-compile the out
 python3 make_agreement.py
 ```
 
+make_agreement.py has the following optional arguments:
+
+```
+  -h, --help            show this help message and exit
+  --verbose, -v         Turn verbosity on
+  --debug, -d           Turn debugging on
+  --parse PARSE, -p PARSE
+                        Path to an existing custom agreement document to parse
+                        into an agreement. This will re-read the custom
+                        agreement values from this file as well as from the
+                        entity files. As such, this will execute the template
+                        without the decision tree questions. This enables you
+                        to tweak your agreement json file and/or your entity
+                        csv files to re-generate your agreements quickly.
+  --agreement_type AGREEMENT_TYPE, -a AGREEMENT_TYPE
+                        The type of agreement template to use. (plain,
+                        explicit, or both)
+```
+
 ### Explicit Rights and Responsibility Statement Templates
 
 Concise explicit rights and responsibility statement templates for each agreement section.
