@@ -235,10 +235,14 @@ class Application(tk.Frame):
         # Set theme
         if theme:
             self.theme = theme
-        self.screen_width = int(master.winfo_screenwidth())
-        self.screen_height = int(master.winfo_screenheight())
-        master.minsize(height=self.screen_height, width=self.screen_width)
-        master.maxsize(height=self.screen_height, width=self.screen_width)
+        possible_width = int(self.window.winfo_screenwidth())
+        possible_height = int(self.window.winfo_screenheight())
+        self.screen_width = possible_width if possible_width < 1024 else 1024
+        self.screen_height = possible_height if possible_height < 768 else 768
+        self.window.minsize(height=int(self.screen_height),
+                            width=int(self.screen_width))
+        self.window.maxsize(height=self.screen_height, width=self.screen_width)
+        self.window.update()
         self.grid(sticky="nsew")
         self.set_theme()
         # ---  Outer Frame  ---
@@ -401,7 +405,7 @@ class Application(tk.Frame):
                              background=self.theme['accent'],
                              foreground=self.theme['background'],
                              font=self.font,
-                             wraplength=int((self.screen_width/3)*2))
+                             wraplength=int((self.window.winfo_width()/3)*2))
         question['text'] = question_text
         question.grid(column=0,
                    row=1,
@@ -412,7 +416,7 @@ class Application(tk.Frame):
                              background=self.theme['background'],
                              foreground=self.foreground,
                              font=self.help_font,
-                             wraplength=int((self.screen_width/3)*2))
+                             wraplength=int((self.window.winfo_width()/3)*2))
         help_text = question_data.get("help", "")
         help_label['text'] = help_text
         help_label.grid(column=0,
@@ -427,7 +431,7 @@ class Application(tk.Frame):
         if default_answers != {}:
             check_frame = tk.Frame(self.frame,
                                    bg=self.theme['background'],
-                                   width=self.screen_width/2)
+                                   width=self.window.winfo_width()/2)
             check_frame.grid(column=0,
                              row=3,
                              padx=10,
@@ -480,7 +484,7 @@ class Application(tk.Frame):
                                         background=self.theme["accent"],
                                         foreground=self.theme["background"],
                                         font=self.help_font,
-                                        wraplength=int((self.screen_width/3)*2))
+                                        wraplength=int((self.window.winfo_width()/3)*2))
             datapackage_name['text'] = "This value is set in the {0} datapackage. You can update them and then complete this helper once you are done.".format(package_name)
             datapackage_name.grid(column=0,
                          row=3,
@@ -491,9 +495,9 @@ class Application(tk.Frame):
 
         # Reconfigure frame size to fit with newly added objects
         self.grid_rowconfigure(0, weight=1, minsize=50)
-        self.grid_rowconfigure(1, weight=0, minsize=self.screen_height/4*3)
+        self.grid_rowconfigure(1, weight=0, minsize=self.window.winfo_height()/4*3)
         self.grid_rowconfigure(2, weight=1, minsize=50)
-        self.grid_columnconfigure(0, weight=1, minsize=self.screen_width)
+        self.grid_columnconfigure(0, weight=1, minsize=self.window.winfo_width())
 
 def set_logging(verbose=False, debug=False):
     if debug == True:
