@@ -20,7 +20,7 @@ git clone https://github.com/seamustuohy/safetag_agreement_generator.git
 
 Install python3 and pip
 ```
-sudo apt install python3 python3-pip pandoc texlive-latex-recommended texlive-fonts-recommended python3-tk
+sudo apt install python3 python3-pip pandoc texlive-latex-recommended texlive-fonts-recommended python3-tk graphviz
 ```
 
 Install Jinja2
