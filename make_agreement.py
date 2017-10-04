@@ -235,10 +235,10 @@ class Application(tk.Frame):
         # Set theme
         if theme:
             self.theme = theme
-        self.screen_width = int(master.winfo_screenwidth()/2)
-        self.screen_height = int((master.winfo_screenheight()/3)*2)
+        self.screen_width = int(master.winfo_screenwidth())
+        self.screen_height = int(master.winfo_screenheight())
         master.minsize(height=self.screen_height, width=self.screen_width)
-        master.maxsize(height=self.screen_height+20, width=self.screen_width)
+        master.maxsize(height=self.screen_height, width=self.screen_width)
         self.grid(sticky="nsew")
         self.set_theme()
         # ---  Outer Frame  ---
@@ -264,7 +264,7 @@ class Application(tk.Frame):
         # Add inner Frame within outer frame
         self.frame = tk.Frame(self,
                               bg=self.theme['background'],
-                              height=self.screen_height-100,
+                              height=self.screen_height/3,
                               width=self.screen_width)
         self.frame.grid(row=1,
                         pady=10,
@@ -491,7 +491,7 @@ class Application(tk.Frame):
 
         # Reconfigure frame size to fit with newly added objects
         self.grid_rowconfigure(0, weight=1, minsize=50)
-        self.grid_rowconfigure(1, weight=0, minsize=self.screen_height-100)
+        self.grid_rowconfigure(1, weight=0, minsize=self.screen_height/4*3)
         self.grid_rowconfigure(2, weight=1, minsize=50)
         self.grid_columnconfigure(0, weight=1, minsize=self.screen_width)
 
