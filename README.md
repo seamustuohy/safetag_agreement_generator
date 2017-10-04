@@ -20,13 +20,19 @@ git clone https://github.com/seamustuohy/safetag_agreement_generator.git
 
 Install python3 and pip
 ```
-sudo apt install python3 python3-pip pandoc texlive-latex-recommended texlive-fonts-recommended
+sudo apt install python3 python3-pip pandoc texlive-latex-recommended texlive-fonts-recommended python3-tk
 ```
 
 Install Jinja2
 ```
 sudo -H pip3 install Jinja2
 ```
+
+Install graph creation libraries
+```
+sudo -H pip3 install pygraphviz networkx
+```
+
 
 Install DataPackage (1.0)
 This was written right before the 1.0 breaking release of datapackage. If your version of pip has the 1.0+ version of data package in it you can install it using pip. ```sudo -H pip3 install datapackage``` If it does not, then you will have to follow the below instructions.
@@ -47,6 +53,7 @@ The SAFETAG agreement generator includes an interactive agreement decision makin
 python3 make_agreement.py
 ```
 
+![screenshot of interface](https://github.com/seamustuohy/safetag_agreement_generator/blob/decision_tree/images/screenshot.png?raw=true)
 
 Once the Assessor has finished entering data in the GUI a new "custom variable" file will be create in the "variables" folder. It will be named `custom_[DATE]_[TIME].json` (for example: `custom_2017_Sep_10_13_17.json`.) You can learn more about the structure of this variable file in the **Variable Files** section below.
 
@@ -217,6 +224,34 @@ Each of these files is structured as a python object. Any additions to the meta-
 
 
 #### Agreement Decision Trees
+
+A visualization of the SAFETAG agreement decision tree. This includes transforming a structured decision data file (see: Agreement Decision GUI) into an agreement wide decision tree that shows how decision build upon each other.
+
+This agreement decision tree, when looked at in relation to the agreement templates, will allow assessors to more explore how they can customize their agreements to match their assessment activities.
+
+A pre-built decision tree can be found in the outputs directory.
+
+```
+└── outputs
+    └── decision_tree.svg
+```
+
+
+This tree, when opened in a users browser, shows
+* Each individual question that a user will have to answer;
+* How the answer to these questions open up further questions; and
+* The help text for those questions (if the user hovers over a question with their mouse.)
+
+If the user decides to their own decisions to the core decision data file and templates this tree, like the GUI, is able to be easily updated to use the new decisions. The following command re-compiles the decision tree SVG when run.
+
+```python
+python3 make_agreement.py --graph
+```
+
+The decision trees will not provide the costs and benefits for each decision in the tree. These trade-offs differ widely based upon the context of an assessment. Just a few of the complex considerations that make this a such a complex task include an assessor’s relationship with an organization, the type of assessment being provided, and the source of funding.
+
+
+#### Agreement Decision GUI
 
 The SAFETAG agreement generator includes an interactive agreement decision making tool that allows assessors to more easily customize their agreements to match their assessment activities.
 

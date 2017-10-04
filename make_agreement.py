@@ -27,6 +27,82 @@ import re
 import tkinter as tk
 from tkinter import font
 
+
+import pygraphviz as pgv
+import networkx as nx
+
+# =======================
+# Graph Viz
+# =======================
+
+def create_graph(decision_path):
+    G = nx.DiGraph()
+    G.graph['label'] = 'SAFETAG Agreement Decision Path'
+    with open(decision_path) as decision_io:
+        decisions = json.load(decision_io)
+    edges = []
+    root_node_name = "safetag_agreement"
+    G.add_node(root_node_name)
+    nodes_subgraphs = {"sections": []}
+    for section, questions in decisions.items():
+        depends_level = {}
+        depends_tree = {}
+        node = G.add_node(section)
+        # add section to eventual section subgraph
+        nodes_subgraphs['sections'].append(section)
+        node = G.node[section]
+        node['label'] = section
+        node["shape"]="box"
+        node["style"]="filled"
+        node["fillcolor"]="white"
+        edges.append((root_node_name, section, ""))
+        for question in questions:
+            question_sets = question['sets']
+            G.add_node(question_sets)
+            node = G.node[question_sets]
+            node['label'] = question.get('question')
+            node["shape"]="box"
+            node["style"]="filled"
+            node["fillcolor"]="white"
+            node['tooltip'] = question.get('help', '')
+            # Check dependencies
+            dependencies = question.get('depends', {})
+            if dependencies != {}:
+                for depends_on, depends_value in dependencies.items():
+                    if depends_on != "type":
+                        edges.append((depends_on,
+                                      question_sets,
+                                      depends_value))
+                        depends_level.setdefault(question_sets, 0)
+                        depends_level[question_sets] += 1
+                        depends_tree.setdefault(question_sets, [])
+                        depends_tree[question_sets].append(depends_on)
+            else:
+                edges.append((section, question_sets, ""))
+                # Add node to section subgraph
+                nodes_subgraphs.setdefault(section, []).append(question_sets)
+        dep_subgraphs = {}
+        for quest_name, quest_deps in depends_tree.items():
+            current_dep_num = 0
+            for dep in quest_deps:
+                current_dep_num += depends_level.get(quest_name, 0)
+            dep_subgraphs.setdefault("{0}_{1}".format(section, current_dep_num),
+                                     []).append(quest_name)
+
+    for edge in edges:
+        G.add_edge(edge[0],
+                   edge[1],
+                   label=edge[2])
+    A = nx.nx_agraph.to_agraph(G)
+    # Make sections top level item
+    A.add_subgraph(nodes_subgraphs.get("sections"), rank=0)
+    # Toss sections for same ranking
+    toss_sections = nodes_subgraphs.pop("sections")
+    for i,subgraph_items in nodes_subgraphs.items():
+        A.add_subgraph(subgraph_items, rank='same')
+    A.draw('outputs/decision_tree.svg', prog='dot', args="-Grankdir=LR")
+
+
 # =======================
 # Template Creation Code
 # =======================
@@ -283,7 +359,7 @@ class Application(tk.Frame):
         if depends != {}: # Dependency exists!
             # Check for dependency found earlier in this section
             # Todo, allow dependencies to be found across sections
-            print(self.decisions_made[self.current_section])
+            self.log.debug(self.decisions_made[self.current_section])
             found = evaluate_depends(depends,
                                      self.decisions_made[self.current_section])
         if found is None:
@@ -295,7 +371,7 @@ class Application(tk.Frame):
         elif found is False:
             # Dependency was asked and answer does not match
             # We don't need to ask this question
-            print("Dependency for {0} not met".format(question_text))
+            self.log.debug("Dependency for {0} not met".format(question_text))
             self.decisions_made[self.current_section][self.current_question] = ""
             self.next_decision()
         else:
@@ -372,8 +448,8 @@ class Application(tk.Frame):
                                         value=val,
                                         command=lambda : self.action_select(
                                             radioVar.get()))
-                _radio.grid(column=i,
-                            row=0,
+                _radio.grid(column=0,
+                            row=i,
                             padx=2,
                             pady=2)
                 _radio.deselect()
@@ -434,12 +510,15 @@ def parse_arguments():
                         help="Turn debugging on",
                         action='store_true')
     parser.add_argument("--parse", "-p",
-                        help="Path to an existing custom agreement document to parse into an agreement.",
+                        help="Path to an existing custom agreement document to parse into an agreement. This will re-read the custom agreement values from this file as well as from the entity files. As such, this will execute the template without the decision tree questions. This enables you to tweak your agreement json file and/or your entity csv files to re-generate your agreements quickly.",
                         type=argparse.FileType('r'),
                         default=None)
     parser.add_argument("--agreement_type", "-a",
                         help="The type of agreement template to use. (plain, explicit, or both)",
                         default="both")
+    parser.add_argument("--graph", "-g",
+                        help="Create a decision tree graph",
+                        action='store_true')
     args = parser.parse_args()
     return args
 
@@ -451,6 +530,9 @@ def main():
     # If only parsing don't run GUI
     if args.parse is not None:
         create_custom(args.parse, args.agreement_type)
+    # If making graph don't run GUI
+    elif args.graph is True:
+        create_graph(decision_path="variables/decisions.json")
     else:
         root = tk.Tk(className="Safetag")
         default_theme = {

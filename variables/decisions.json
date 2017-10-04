@@ -180,22 +180,22 @@
   "parties": [
     {
       "question": "What is the Service Providers name?",
-      "help": "This is the official name that the agreement will use for the organization and/or individual conduction the assessment.",
+      "help": "This is the official name that the agreement will use for the organization and/or individual conduction the assessment.\nFor example, \"This contract agreement is entered into as of July 12th 2016 by and between [THIS QUESTION], a Washinton, DC Corporation located at 1600 Pennsylvania Ave NW, Washington, DC 20500 and XYC Company, a  a Colorado 501(c)(3) nonprofit corporation located at 1600 Pennsylvania Ave NW, Washington, DC 20500.\"",
       "sets": "service_provider_name"
     },
     {
       "question": "What is the official name of the Recipient?",
-      "help": "This is the official name that the agreement will use for organization and/or individual being assessed.",
+      "help": "This is the official name that the agreement will use for organization and/or individual being assessed.\nFor example, \"This contract agreement is entered into as of July 12th 2016 by and between ABC Assessing, a Washinton, DC Corporation located at 1600 Pennsylvania Ave NW, Washington, DC 20500 and [THIS QUESTION], a  a Colorado 501(c)(3) nonprofit corporation located at 1600 Pennsylvania Ave NW, Washington, DC 20500.\"",
       "sets": "recipient_name"
     },
     {
       "question": "What type of entity is the Service Provider",
-      "help": "Are they a Non-Profit, LLC, Corporation, etc.",
+      "help": "Are they a Non-Profit, LLC, Corporation, etc.\nFor example, \"This contract agreement is entered into as of July 12th 2016 by and between ABC Assessing, a [THIS QUESTION] located at 1600 Pennsylvania Ave NW, Washington, DC 20500 and XYC Company, a Colorado 501(c)(3) nonprofit corporation located at 1600 Pennsylvania Ave NW, Washington, DC 20500.\"",
       "sets": "service_provider_entity_type"
     },
     {
       "question": "What is the Service Providers address",
-      "help": "i.e. 555 Noth Westerson st. Washinton, DC, 20033",
+      "help": "i.e. 555 Noth Westerson st. Washinton, DC, 20033\nFor example, \"This contract agreement is entered into as of July 12th 2016 by and between ABC Assessing, a Washinton, DC Corporation located at [THIS QUESTION] and XYC Company, a Colorado 501(c)(3) nonprofit corporation located at 1600 Pennsylvania Ave NW, Washington, DC 20500.\"",
       "sets": "service_provider_address"
     },
     {
@@ -204,7 +204,7 @@
       "sets": "recipient_address"
     },    {
       "question": "What type of entity is the Recipient",
-      "help": "Are they a Non-Profit, LLC, Corporation, etc.",
+      "help": "Are they a Non-Profit, LLC, Corporation, etc.\nFor example, \"This contract agreement is entered into as of July 12th 2016 by and between ABC Assessing, a Washinton, DC Corporation located at 1600 Pennsylvania Ave NW, Washington, DC 20500 and XYC Company, a Colorado 501(c)(3) nonprofit corporation  located at [THIS QUESTION].\"",
       "sets": "recipient_entity_type"
     },
     {
@@ -359,11 +359,7 @@
     {
       "question": "What are the max number of days of extension that are allowed?",
       "help": "",
-      "sets": "max_num_of_extension_delays",
-      "answers": {
-        "Yes": true,
-        "No": false
-      }
+      "sets": "max_num_of_extension_delays"
     },
     {
       "question": "How should notification be done?",
@@ -565,7 +561,7 @@
         "No": false
       },
       "depends": {
-        "recipiant_must_support_incident_response": false
+        "sp_must_support_incident_response": false
       }
     },
     {
@@ -591,7 +587,7 @@
         "No": false
       },
       "depends": {
-        "recipiant_must_support_incident_response": false
+        "sp_must_support_incident_response": false
       }
     },
     {
@@ -603,7 +599,7 @@
         "No": false
       },
       "depends": {
-        "recipiant_must_support_incident_referrals": false
+        "sp_must_support_incident_referrals": false
       }
     },
     {
@@ -618,7 +614,7 @@
       "sets": "paid_incident_referral_info",
       "take_input": false,
       "depends": {
-        "paid_recipiant_supported_incident_referrals": true
+        "paid_sp_supported_incident_referrals": true
       }
     },
     {
@@ -626,7 +622,7 @@
       "help": "This is a free text section for you to describe the level of interaction that you would like between yourself and any individuals who are brought in to respond to an incident.",
       "sets": "engagement_with_incident_responder",
       "depends": {
-        "recipiant_must_support_incident_response": false
+        "sp_must_support_incident_response": false
       }
     },
     {
@@ -723,7 +719,7 @@
   "representations_and_warranties": [
     {
       "question": "Are there any additional commitments, warranties, and/or representations by either party that needs to be made explicit in the agreement?.",
-      "help": "[Speak to a lawyer to draft and review language for this section.] A representation is a statement of fact that applies to the past or present that if untrue might lead to the contract being voided. (i.e. \"Service Provider is independent, non‐product affiliated, and not in the business of selling security systems hardware.\" or \"The recipiant authorized to give authorization to the Service Provider to perform technical assessment activities on all systems, networks, and devices?\") Warranties are statements or promise(s) that a condition is, and/or will be, true when made and/or for a period of time, often for the term of the agreement. ",
+      "help": "You need to set these in the representations_and_warranties.csv file. \n[Speak to a lawyer to draft and review language for this section.] A representation is a statement of fact that applies to the past or present that if untrue might lead to the contract being voided. (i.e. \"Service Provider is independent, non‐product affiliated, and not in the business of selling security systems hardware.\" or \"The recipiant authorized to give authorization to the Service Provider to perform technical assessment activities on all systems, networks, and devices?\") Warranties are statements or promise(s) that a condition is, and/or will be, true when made and/or for a period of time, often for the term of the agreement. ",
       "from_package": {
         "name": "representations_and_warranties"
       },
@@ -735,14 +731,14 @@
     {
       "question": "This is a free text section for you to describe your Liability to the Recipient and the Recipients liability to you.",
       "help": "[Speak to a lawyer to draft and review language for this section.]",
-      "sets": "limitations_on_liability"
+      "sets": "limitations_on_liability_text"
     }
   ],
   "indemnities": [
     {
       "question": "This is a free text section for you to describe how parties \"indemnify each other from 3rd party action related to the assessment.",
       "help": "[Speak to a lawyer to draft and review language for this section.] An example of an assessment related indemnity would be a clause stating that the Service Provider is indemnified from any third party legal action  that was caused by actions you took based off of inaccurate information provided by the Recipient. (i.e. if you scan an IP address the Recipient told you they own, but that turns out to be owned by a third party.) You would want them to indemnify you for that action so they take on the liability with the third party actor who sues you. Another example might be that the Recipient wants to be indemnified from future data-breach lawsuits from their clients if they suffer a breach on a system you found no flaws in.",
-      "sets": "indemnities"
+      "sets": "indemnities_text"
     }
   ],
   "expenses": [
@@ -758,6 +754,8 @@
     {
       "question": "Do you have to get pre-approval for expenses?",
       "answers": {
+        "Yes": true,
+        "No": false
       },
       "sets": "basic_payment_conditions",
       "depends": {

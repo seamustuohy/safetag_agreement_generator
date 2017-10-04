@@ -51,17 +51,17 @@ The Service Provider will provide a security assessment as outlined in the attac
 
 {% block force_majeure %}{% endblock %}
 
-{% if limitations_on_liability.limitations_on_liability != "" %}
+{% if limitations_on_liability.limitations_on_liability_text != "" %}
 ## Limitations on Liability
 {% block liability %}
-{{ limitations_on_liability.limitations_on_liability }}
+{{ limitations_on_liability.limitations_on_liability_text }}
 {% endblock %}
 {% endif %}
 
-{% if indemnities.indemnities != "" %}
+{% if indemnities.indemnities_text != "" %}
 ## Indemnification
 {% block indem %}
-{{ indemnities.indemnities }}
+{{ indemnities.indemnities_text }}
 {% endblock %}
 {% endif %}
 
